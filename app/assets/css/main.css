@@ -1,2 +1,37 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@layer base {
+  :root {
+    --brand-primary: #3d63dd;
+    --brand-secondary: #f8b84a;
+    --surface-base: #f7f8fc;
+    --surface-elevated: #ffffff;
+    --text-primary: #1b1f24;
+    --text-muted: #5b6474;
+    --border-default: #e0e5f2;
+  }
+
+  body {
+    background-color: var(--surface-base);
+    color: var(--text-primary);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -200%);
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    background-color: var(--brand-primary);
+    color: #fff;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+    z-index: 100;
+  }
+
+  .skip-link:focus {
+    transform: translate(-50%, 0.75rem);
+    outline: none;
+  }
+}

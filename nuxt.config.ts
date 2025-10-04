@@ -2,6 +2,11 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      fakeStoreApiBase: 'https://fakestoreapi.com',
+    },
+  },
   modules: ['@nuxt/ui'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },

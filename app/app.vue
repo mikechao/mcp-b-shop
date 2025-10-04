@@ -57,19 +57,70 @@
 </template>
 
 <script setup lang="ts">
+type CategoryOption = {
+  id: string
+  label: string
+  icon?: string
+  image?: string
+  count?: number
+}
+
+const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
+
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
 const cartCount = useState('cart-count', () => 0)
 
 const isCategoryDrawerOpen = ref(false)
 
-const categoryOptions = computed(() => [
-  { id: 'all', label: 'All products', icon: 'i-heroicons-squares-2x2' },
-  { id: 'electronics', label: 'Electronics', icon: 'i-heroicons-computer-desktop' },
-  { id: 'jewelery', label: 'Jewelry', icon: 'i-heroicons-sparkles' },
-  { id: "men's clothing", label: "Men's clothing", image: '/mens-clothing.webp' },
-  { id: "women's clothing", label: "Women's clothing", image: '/womens-clothing.webp' },
-])
+const { categories: apiCategories } = useFakeStoreCategories()
+const { products: allProducts } = useFakeStoreProducts()
+
+const categoryCounts = computed(() => {
+  const counts = new Map<string, number>()
+
+  for (const product of allProducts.value) {
+    const existing = counts.get(product.category) ?? 0
+    counts.set(product.category, existing + 1)
+  }
+
+  return counts
+})
+
+const categoryOptions = computed<CategoryOption[]>(() => {
+  const baseCategories = apiCategories.value.length ? apiCategories.value : [...DEFAULT_CATEGORIES]
+  const seen = new Set<string>()
+
+  const mapped = baseCategories
+    .filter((slug) => {
+      if (seen.has(slug)) {
+        return false
+      }
+      seen.add(slug)
+      return true
+    })
+    .map((slug) => {
+      const option = createCategoryOption(slug)
+      const count = categoryCounts.value.get(slug)
+
+      return {
+        ...option,
+        count: count && count > 0 ? count : undefined,
+      }
+    })
+
+  const totalCount = allProducts.value.length
+
+  return [
+    {
+      id: 'all',
+      label: 'All products',
+      icon: 'i-heroicons-squares-2x2',
+      count: totalCount > 0 ? totalCount : undefined,
+    },
+    ...mapped,
+  ]
+})
 
 const toast = useToast()
 
@@ -88,5 +139,34 @@ function handleOpenCart() {
     description: 'We will open the shopping cart in a future iteration.',
     icon: 'i-heroicons-shopping-cart-20-solid',
   })
+}
+
+function createCategoryOption(slug: string): CategoryOption {
+  const label = formatCategoryLabel(slug)
+
+  if (slug === "men's clothing") {
+    return { id: slug, label, image: '/mens-clothing.webp' }
+  }
+
+  if (slug === "women's clothing") {
+    return { id: slug, label, image: '/womens-clothing.webp' }
+  }
+
+  if (slug === 'electronics') {
+    return { id: slug, label, icon: 'i-heroicons-computer-desktop' }
+  }
+
+  if (slug === 'jewelery') {
+    return { id: slug, label, icon: 'i-heroicons-sparkles' }
+  }
+
+  return { id: slug, label, icon: 'i-heroicons-tag' }
+}
+
+function formatCategoryLabel(value: string) {
+  return value
+    .split(' ')
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ')
 }
 </script>

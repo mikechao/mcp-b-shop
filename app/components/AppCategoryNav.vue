@@ -3,16 +3,30 @@
     <div>
       <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Categories</p>
     </div>
-    <UVerticalNavigation :links="navigationLinks" size="lg" class="-mx-2">
-      <template #badge="{ link }">
-        <span
-          v-if="link.count !== undefined"
-          class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600"
+    <ul role="list" class="flex flex-col gap-1">
+      <li v-for="category in categories" :key="category.id">
+        <button
+          type="button"
+          class="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+          :class="buttonClasses(category.id)"
+          :aria-current="isActive(category.id) ? 'page' : undefined"
+          @click="handleSelect(category.id)"
         >
-          {{ link.count }}
-        </span>
-      </template>
-    </UVerticalNavigation>
+          <span class="flex items-center gap-2">
+            <span :class="iconClasses(category.id)">
+              <UIcon :name="category.icon ?? 'i-heroicons-tag'" class="size-4" aria-hidden="true" />
+            </span>
+            <span class="truncate">{{ category.label }}</span>
+          </span>
+          <span
+            v-if="category.count !== undefined"
+            class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
+          >
+            {{ category.count }}
+          </span>
+        </button>
+      </li>
+    </ul>
   </nav>
 </template>
 
@@ -33,15 +47,30 @@ const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
 
-const navigationLinks = computed(() =>
-  props.categories.map((category) => ({
-    id: category.id,
-    label: category.label,
-    icon: category.icon ?? 'i-heroicons-tag',
-    count: category.count,
-    active: props.modelValue === category.id,
-    click: () => emit('update:modelValue', category.id),
-    'aria-current': props.modelValue === category.id ? 'page' : undefined,
-  })),
-)
+const categories = computed(() => props.categories)
+
+function isActive(id: string) {
+  return props.modelValue === id
+}
+
+function handleSelect(id: string) {
+  if (!isActive(id)) {
+    emit('update:modelValue', id)
+  }
+}
+
+function buttonClasses(id: string) {
+  return isActive(id)
+    ? 'bg-primary-50 text-primary-600 ring-1 ring-primary-100'
+    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+}
+
+function iconClasses(id: string) {
+  return [
+    'inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition',
+    isActive(id)
+      ? 'bg-primary-100 text-primary-600'
+      : 'bg-slate-100',
+  ]
+}
 </script>

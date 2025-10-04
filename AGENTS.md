@@ -29,5 +29,7 @@
 - Squash WIP commits before opening a PR and reference related issue keys in the body.
 - PRs should summarize scope, list test evidence (`pnpm build`, screenshots for UI), and note any follow-up work.
 
-## MCP Servers to use
+## Additional Information
 - use the context7-mcp server to look up documentation for various frameworks that you will encounter for reference
+- Nuxt 4 is the framework used. use the context7-mcp server to look up documentation
+- Nuxt UI is used in this project. Nuxt UI is the official Nuxt-native component framework and design system, built with Tailwind and Radix primitives. It gives you themable, composable components

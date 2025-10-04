@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
+    "@iconify-json/heroicons": "^1.2.3",
     "@unocss/eslint-plugin": "^66.5.1",
     "eslint": "^9.36.0"
   },

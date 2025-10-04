@@ -1,33 +1,22 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Nuxt 4 loads from `app/app.vue`; group shared UI in `app/components/` and route-specific logic under folders you create in `app/` (e.g., `app/routes/shop`).
-- Use `public/` for static assets served verbatim (logos, manifest files) and keep generated files out of version control.
-- Central configuration lives in `nuxt.config.ts`; update it when adding modules, runtime config, or build tweaks.
-- `tsconfig.json` defines the base TypeScript settings; extend it instead of overwriting defaults. Dependencies are managed through `package.json` and `pnpm-lock.yaml`.
+Nuxt 4 loads entry from `app/app.vue`; keep page-level features under `app/routes/<feature>` with co-located stores/composables. Shared UI like buttons or layouts in `app/components/`, and design tokens in `app/assets/`. Agent instructions live in `agents/` for cross-team context; update alongside feature work. Static files (logos, manifest, fonts) belong in `public/`. Core configuration sits in `nuxt.config.ts` and owns module registration, runtime config, and Tailwind/Nuxt UI setup. TypeScript baselines live in `tsconfig.json`; extend via `compilerOptions` instead of replacing defaults.
 
 ## Build, Test, and Development Commands
-- `pnpm install` – install workspace dependencies; rerun after updating Nuxt modules.
-- `pnpm dev` – start the Nuxt development server with HMR at the default port.
-- `pnpm build` – produce an optimized production bundle; run before deployment.
-- `pnpm generate` – create a static site build when targeting Jamstack hosting.
-- `pnpm preview` – serve the production build locally to verify deployment artifacts.
+`pnpm install` prepares dependencies and runs `nuxt prepare` to refresh types. `pnpm dev` launches the HMR dev server at http://localhost:3000. `pnpm build` compiles a production bundle; run before pushing release branches. `pnpm generate` produces a static export for Jamstack deploys. `pnpm preview` serves the built output locally so you can verify prod behaviour.
 
 ## Coding Style & Naming Conventions
-- Prefer `<script setup lang="ts">` in Vue SFCs with 2-space indentation.
-- Name Vue components in PascalCase (`ProductGrid.vue`) and composables/stores in camelCase (`useCart`).
-- Co-locate component-specific styles using `<style scoped>` and keep shared tokens in a dedicated `app/assets/` folder.
-- Run an editor-integrated formatter (Prettier or equivalent) before committing; align imports to Nuxt auto-import rules.
+Use `<script setup lang="ts">` with 2-space indentation and single quotes in templates. Name components in PascalCase (`ProductGrid.vue`) and composables/stores in camelCase (`useCart`). Scope component styles with `<style scoped>` and place shared tokens in `app/assets/`. Follow the root ESLint config (`@antfu/eslint-config` + `@unocss/eslint-plugin`) and run your formatter before committing to retain Nuxt auto-import ordering.
 
 ## Testing Guidelines
-- Tests are not configured yet; when introducing them, add Vitest-based suites under `tests/unit/` and mock Nuxt composables via `@nuxt/test-utils`.
-- Use descriptive `*.spec.ts` filenames that mirror the component or composable under test.
-- Ensure critical features cover edge cases (loading state, API errors) and document any gaps in the PR.
+Vitest is the preferred runner when tests are introduced; place specs under `tests/unit/` mirroring the source path (`ProductGrid.spec.ts`). Stub Nuxt composables via `@nuxt/test-utils` and cover loading, failure, and empty states when hitting FakeStoreAPI. Document any intentionally skipped cases in the PR description until coverage is in place.
 
 ## Commit & Pull Request Guidelines
-- Follow the existing history by writing concise, imperative commit subjects (e.g., `Add product gallery carousel`).
-- Squash WIP commits before opening a PR and reference related issue keys in the body.
-- PRs should summarize scope, list test evidence (`pnpm build`, screenshots for UI), and note any follow-up work.
+Write imperative, concise commit subjects (`Add product carousel`). Squash experimental commits before opening a PR. Each PR should describe scope, link relevant issues, and attach screenshots or recordings for UI changes plus the latest `pnpm build` or `pnpm preview` check. Note follow-up tasks or config changes that reviewers should track.
+
+## Security & Configuration Tips
+Keep API keys and FakeStore overrides in local `.env` files and reference them via runtime config; never commit secrets. Review `nuxt.config.ts` for CSP or proxy adjustments before introducing third-party scripts.
 
 ## Additional Information
 - use the context7-mcp server to look up documentation for various frameworks that you will encounter for reference

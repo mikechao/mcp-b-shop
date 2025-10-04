@@ -67,8 +67,8 @@ const categoryOptions = computed(() => [
   { id: 'all', label: 'All products', icon: 'i-heroicons-squares-2x2' },
   { id: 'electronics', label: 'Electronics', icon: 'i-heroicons-computer-desktop' },
   { id: 'jewelery', label: 'Jewelry', icon: 'i-heroicons-sparkles' },
-  { id: "men's clothing", label: "Men's clothing", icon: 'i-heroicons-user' },
-  { id: "women's clothing", label: "Women's clothing", icon: 'i-heroicons-user-group' },
+  { id: "men's clothing", label: "Men's clothing", image: '/mens-clothing.webp' },
+  { id: "women's clothing", label: "Women's clothing", image: '/womens-clothing.webp' },
 ])
 
 const toast = useToast()

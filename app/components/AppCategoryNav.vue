@@ -14,7 +14,19 @@
         >
           <span class="flex items-center gap-2">
             <span :class="iconClasses(category.id)">
-              <UIcon :name="category.icon ?? 'i-heroicons-tag'" class="size-4" aria-hidden="true" />
+              <img
+                v-if="category.image"
+                :src="category.image"
+                alt=""
+                class="h-full w-full object-cover"
+                loading="lazy"
+              >
+              <UIcon
+                v-else
+                :name="category.icon ?? 'i-heroicons-tag'"
+                class="size-4"
+                aria-hidden="true"
+              />
             </span>
             <span class="truncate">{{ category.label }}</span>
           </span>
@@ -35,6 +47,7 @@ type Category = {
   id: string
   label: string
   icon?: string
+  image?: string
   count?: number
 }
 
@@ -67,7 +80,7 @@ function buttonClasses(id: string) {
 
 function iconClasses(id: string) {
   return [
-    'inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition',
+    'inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg text-slate-500 transition',
     isActive(id)
       ? 'bg-primary-100 text-primary-600'
       : 'bg-slate-100',

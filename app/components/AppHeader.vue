@@ -24,29 +24,26 @@
             input-class="rounded-full"
             placeholder="Search products"
             size="lg"
+          />
+          <UButton
+            type="submit"
+            color="primary"
+            class="hidden md:inline-flex"
+            icon="i-heroicons-magnifying-glass-20-solid"
           >
-            <template #trailing>
-              <UButton
-                type="submit"
-                color="primary"
-                class="hidden md:inline-flex"
-                icon="i-heroicons-magnifying-glass-20-solid"
-              >
-                Search
-              </UButton>
-              <UTooltip text="Search products">
-                <UButton
-                  type="submit"
-                  color="primary"
-                  variant="solid"
-                  class="md:hidden"
-                  square
-                  icon="i-heroicons-magnifying-glass-20-solid"
-                  aria-label="Search products"
-                />
-              </UTooltip>
-            </template>
-          </UInput>
+            Search
+          </UButton>
+          <UTooltip text="Search products">
+            <UButton
+              type="submit"
+              color="primary"
+              variant="solid"
+              class="md:hidden"
+              square
+              icon="i-heroicons-magnifying-glass-20-solid"
+              aria-label="Search products"
+            />
+          </UTooltip>
         </div>
       </form>
 

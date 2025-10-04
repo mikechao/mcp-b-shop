@@ -10,13 +10,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.0.1",
     "nuxt": "^4.1.2",
+    "tailwindcss": "^4.1.14",
     "vue": "^3.5.22",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
-    "eslint": "^9.36.0",
-    "@unocss/eslint-plugin": "^66.5.1"
-  }
+    "@unocss/eslint-plugin": "^66.5.1",
+    "eslint": "^9.36.0"
+  },
+  "packageManager": "pnpm@10.18.0+sha512.e804f889f1cecc40d572db084eec3e4881739f8dec69c0ff10d2d1beff9a4e309383ba27b5b750059d7f4c149535b6cd0d2cb1ed3aeb739239a4284a68f40cfa"
 }

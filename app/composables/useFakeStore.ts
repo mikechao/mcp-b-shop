@@ -1,4 +1,5 @@
-import { computed, toValue, type MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
+import { computed, toValue } from 'vue'
 
 const DEFAULT_BASE_URL = 'https://fakestoreapi.com'
 

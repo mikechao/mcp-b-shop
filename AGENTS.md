@@ -23,3 +23,4 @@ Keep API keys and FakeStore overrides in local `.env` files and reference them v
 - Nuxt 4 is the framework used. use the context7-mcp server to look up documentation
 - Nuxt UI is used in this project. Nuxt UI is the official Nuxt-native component framework and design system, built with Tailwind and Radix primitives. It gives you themable, composable components
 - For product information we are using 'FakeStoreAPI' at https://github.com/keikaavousi/fake-store-api
+- Pinia is used as store to share state across components and pages

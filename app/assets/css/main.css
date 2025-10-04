@@ -37,9 +37,9 @@
   --radius-2xl: 1.25rem;
   --radius-pill: 9999px;
 
-  --spacing-3.5: 0.875rem;
-  --spacing-4.5: 1.125rem;
-  --spacing-7.5: 1.875rem;
+  --spacing-3-5: 0.875rem;
+  --spacing-4-5: 1.125rem;
+  --spacing-7-5: 1.875rem;
 
   --shadow-subtle: 0 10px 30px -16px rgba(61, 99, 221, 0.28);
 }

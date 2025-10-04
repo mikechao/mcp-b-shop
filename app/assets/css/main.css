@@ -1,20 +1,60 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+@theme {
+  --color-brand-50: #ecf0ff;
+  --color-brand-100: #d8e1ff;
+  --color-brand-200: #b5c7ff;
+  --color-brand-300: #90a8ff;
+  --color-brand-400: #6d8bff;
+  --color-brand-500: #4f72f2;
+  --color-brand-600: #3d63dd;
+  --color-brand-700: #2f4ec0;
+  --color-brand-800: #273f99;
+  --color-brand-900: #21347b;
+  --color-brand-950: #141f49;
+
+  --color-accent-50: #fff8e8;
+  --color-accent-100: #ffedc6;
+  --color-accent-200: #fdd788;
+  --color-accent-300: #fcc05a;
+  --color-accent-400: #f8b84a;
+  --color-accent-500: #eba437;
+  --color-accent-600: #cc8626;
+  --color-accent-700: #a46b1f;
+  --color-accent-800: #7c5218;
+  --color-accent-900: #533611;
+  --color-accent-950: #301d08;
+
+  --color-surface-base: #f7f8fc;
+  --color-surface-elevated: #ffffff;
+  --color-text-primary: #1b1f24;
+  --color-text-muted: #5b6474;
+  --color-border-default: #e0e5f2;
+
+  --radius-base: 0.75rem; /* 12px */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-pill: 9999px;
+
+  --spacing-3.5: 0.875rem;
+  --spacing-4.5: 1.125rem;
+  --spacing-7.5: 1.875rem;
+
+  --shadow-subtle: 0 10px 30px -16px rgba(61, 99, 221, 0.28);
+}
+
 @layer base {
   :root {
-    --brand-primary: #3d63dd;
-    --brand-secondary: #f8b84a;
-    --surface-base: #f7f8fc;
-    --surface-elevated: #ffffff;
-    --text-primary: #1b1f24;
-    --text-muted: #5b6474;
-    --border-default: #e0e5f2;
+    --ui-primary: var(--color-brand-600);
+    --ui-primary-dark: var(--color-brand-700);
+    --ui-primary-light: var(--color-brand-400);
+    --ui-accent: var(--color-accent-500);
   }
 
   body {
-    background-color: var(--surface-base);
-    color: var(--text-primary);
+    background-color: var(--color-surface-base);
+    color: var(--color-text-primary);
   }
 
   .skip-link {
@@ -23,7 +63,7 @@
     transform: translate(-50%, -200%);
     padding: 0.75rem 1.5rem;
     border-radius: 9999px;
-    background-color: var(--brand-primary);
+    background-color: var(--color-brand-600);
     color: #fff;
     font-weight: 600;
     transition: transform 0.2s ease;

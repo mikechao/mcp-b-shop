@@ -36,7 +36,7 @@
           <UTooltip text="Search products">
             <UButton
               type="submit"
-              color="primary"
+              color="brand"
               variant="solid"
               class="md:hidden"
               square
@@ -50,7 +50,7 @@
       <UTooltip text="View cart">
         <UButton
           variant="outline"
-          color="gray"
+          color="brand"
           class="relative hidden min-w-max items-center gap-2 md:inline-flex"
           @click="emit('open-cart')"
         >
@@ -69,7 +69,7 @@
       <UTooltip text="View cart" class="md:hidden">
         <UButton
           variant="outline"
-          color="gray"
+          color="brand"
           square
           class="relative md:hidden"
           aria-label="View cart"

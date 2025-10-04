@@ -4,7 +4,7 @@
       <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Categories</p>
     </div>
     <ul role="list" class="flex flex-col gap-1">
-      <li v-for="category in categories" :key="category.id">
+      <li v-for="category in categoryList" :key="category.id">
         <button
           type="button"
           class="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
@@ -51,16 +51,22 @@ type Category = {
   count?: number
 }
 
-const props = defineProps<{
-  modelValue: string
-  categories: Category[]
-}>()
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  categories: {
+    type: Array as PropType<Category[]>,
+    default: () => [],
+  },
+})
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
 }>()
 
-const categories = computed(() => props.categories)
+const categoryList = computed(() => props.categories)
 
 function isActive(id: string) {
   return props.modelValue === id

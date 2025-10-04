@@ -24,7 +24,7 @@
         <main id="main-content" class="flex flex-1 flex-col">
           <div class="border-b border-gray-200/80 bg-white/80 px-4 py-4 backdrop-blur lg:hidden">
             <UButton
-              color="gray"
+              color="neutral"
               variant="ghost"
               icon="i-heroicons-bars-3"
               class="w-full justify-between"

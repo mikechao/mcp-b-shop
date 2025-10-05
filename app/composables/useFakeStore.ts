@@ -1,21 +1,20 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, toValue } from 'vue'
+import type { FakeStoreProduct } from '~/types/fake-store'
+import { fakeStoreProducts } from '../data/fakeStoreFallback'
 
 const DEFAULT_BASE_URL = 'https://fakestoreapi.com'
 
-export interface FakeStoreRating {
-  rate: number
-  count: number
+function resolveFallbackProducts(category: string | null) {
+  if (!category) {
+    return fakeStoreProducts
+  }
+
+  return fakeStoreProducts.filter((product) => product.category === category)
 }
 
-export interface FakeStoreProduct {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
-  rating?: FakeStoreRating
+function resolveFallbackCategories() {
+  return Array.from(new Set(fakeStoreProducts.map((product) => product.category)))
 }
 
 export interface UseFakeStoreProductsOptions {
@@ -44,7 +43,16 @@ export function useFakeStoreProducts(options: UseFakeStoreProductsOptions = {}) 
 
   const { data, pending, error, refresh } = useAsyncData<FakeStoreProduct[]>(
     () => key.value,
-    () => $fetch(`${baseURL}${endpoint.value}`),
+    async () => {
+      try {
+        return await $fetch<FakeStoreProduct[]>(`${baseURL}${endpoint.value}`)
+      } catch (fetchError) {
+        if (process.dev) {
+          console.warn('[FakeStore] Falling back to bundled product data.', fetchError)
+        }
+        return resolveFallbackProducts(normalizedCategory.value)
+      }
+    },
     {
       default: () => [],
       server: true,
@@ -69,7 +77,16 @@ export function useFakeStoreCategories() {
 
   const { data, pending, error, refresh } = useAsyncData<string[]>(
     'fake-store-categories',
-    () => $fetch(`${baseURL}/products/categories`),
+    async () => {
+      try {
+        return await $fetch<string[]>(`${baseURL}/products/categories`)
+      } catch (fetchError) {
+        if (process.dev) {
+          console.warn('[FakeStore] Falling back to bundled category data.', fetchError)
+        }
+        return resolveFallbackCategories()
+      }
+    },
     {
       default: () => [],
       server: true,

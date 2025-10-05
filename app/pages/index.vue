@@ -191,7 +191,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FakeStoreProduct } from '~/composables/useFakeStore'
+import type { FakeStoreProduct } from '~/types/fake-store'
 
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')

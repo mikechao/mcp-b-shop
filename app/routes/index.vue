@@ -1,5 +1,5 @@
 <template>
-  <section class="space-y-6">
+  <section id="product-grid" class="space-y-6">
     <header class="space-y-2">
       <UBreadcrumb :links="breadcrumbLinks" />
       <div class="flex flex-wrap items-end justify-between gap-4">
@@ -24,6 +24,47 @@
       </div>
     </header>
 
+    <div
+      v-if="showFilterSummary"
+      class="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-sm shadow-slate-200/40"
+    >
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Active filters</span>
+      <div class="flex flex-wrap items-center gap-2">
+        <span
+          v-if="isCategoryFiltered"
+          class="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"
+        >
+          {{ filteredCategoryLabel }}
+          <button
+            type="button"
+            class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+            @click="clearCategoryFilter"
+          >
+            <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
+            <span class="sr-only">Clear category filter</span>
+          </button>
+        </span>
+        <span
+          v-if="isSearchFiltered"
+          class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
+        >
+          “{{ searchQueryDisplay }}”
+          <button
+            type="button"
+            class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+            @click="clearSearchFilter"
+          >
+            <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
+            <span class="sr-only">Clear search filter</span>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <p v-if="livePreviewAnnouncement" class="sr-only" aria-live="polite">
+      {{ livePreviewAnnouncement }}
+    </p>
+
     <UAlert
       v-if="productsError"
       color="error"
@@ -41,7 +82,7 @@
       </template>
     </UAlert>
 
-    <div v-if="showSkeletons" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div v-if="showSkeletons" :class="productGridClasses">
       <UCard v-for="index in 8" :key="`skeleton-${index}`" class="flex flex-col gap-4 p-4">
         <USkeleton class="aspect-[4/5] w-full rounded-2xl" />
         <div class="space-y-2">
@@ -53,11 +94,12 @@
       </UCard>
     </div>
 
-    <div v-else-if="hasProducts" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div v-else-if="hasProducts" :class="productGridClasses">
       <article
         v-for="product in displayProducts"
         :key="product.id"
-        class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg"
+        :class="cardClasses(product)"
+        :data-category="product.category"
       >
         <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
           <img
@@ -96,7 +138,9 @@
           <div class="mt-auto flex items-center justify-between gap-3">
             <UButton
               color="primary"
-              class="flex-1 justify-center"
+              :loading="isAddingToCart(product.id)"
+              :disabled="isAddingToCart(product.id)"
+              class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
               icon="i-heroicons-shopping-cart-20-solid"
               @click="handleAddToCart(product)"
             >
@@ -152,6 +196,7 @@ import type { FakeStoreProduct } from '~/composables/useFakeStore'
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
 const cartCount = useState('cart-count', () => 0)
+const previewCategory = useState<string | null>('category-preview', () => null)
 
 const {
   products: rawProducts,
@@ -167,6 +212,14 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 })
 
 const searchTerm = computed(() => searchQuery.value.trim().toLowerCase())
+const searchQueryDisplay = computed(() => searchQuery.value.trim())
+const isSearchFiltered = computed(() => searchQueryDisplay.value.length > 0)
+const isCategoryFiltered = computed(() => selectedCategory.value && selectedCategory.value !== 'all')
+const showFilterSummary = computed(() => isCategoryFiltered.value || isSearchFiltered.value)
+const filteredCategoryLabel = computed(() =>
+  isCategoryFiltered.value ? formatCategoryLabel(selectedCategory.value) : '',
+)
+const productGridClasses = 'grid gap-5 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]'
 
 const filteredProducts = computed<FakeStoreProduct[]>(() => {
   const query = searchTerm.value
@@ -225,6 +278,25 @@ const showEmptyState = computed(() => !productsPending.value && !hasProducts.val
 const canResetFilters = computed(
   () => searchQuery.value.trim().length > 0 || (selectedCategory.value && selectedCategory.value !== 'all'),
 )
+const isPreviewActive = computed(() => !!previewCategory.value && previewCategory.value !== 'all')
+const livePreviewAnnouncement = computed(() => {
+  if (!isPreviewActive.value || !previewCategory.value) {
+    return ''
+  }
+
+  const matchingCount = displayProducts.value.filter(
+    (product) => product.category === previewCategory.value,
+  ).length
+
+  const label = formatCategoryLabel(previewCategory.value)
+
+  if (matchingCount === 0) {
+    return `No products in ${label} yet.`
+  }
+
+  return `Showing ${formatCountLabel(matchingCount, 'product')} in ${label}.`
+})
+const addToCartPendingIds = ref<number[]>([])
 
 const headingTitle = computed(() => {
   if (searchQuery.value) {
@@ -303,16 +375,26 @@ const toast = useToast()
 function handleResetFilters() {
   searchQuery.value = ''
   selectedCategory.value = 'all'
+  previewCategory.value = null
   refreshProducts()
 }
 
 function handleAddToCart(product: DisplayProduct) {
+  if (isAddingToCart(product.id)) {
+    return
+  }
+
+  setAddToCartPending(product.id, true)
   cartCount.value += 1
   toast.add({
     title: 'Added to cart',
     description: `${product.title} has been added to your cart.`,
     icon: 'i-heroicons-shopping-cart-20-solid',
   })
+
+  window.setTimeout(() => {
+    setAddToCartPending(product.id, false)
+  }, 400)
 }
 
 function handleSaveToFavorites(product: DisplayProduct) {
@@ -322,4 +404,48 @@ function handleSaveToFavorites(product: DisplayProduct) {
     icon: 'i-heroicons-heart',
   })
 }
+
+function clearCategoryFilter() {
+  selectedCategory.value = 'all'
+  previewCategory.value = null
+  refreshProducts()
+}
+
+function clearSearchFilter() {
+  searchQuery.value = ''
+  refreshProducts()
+}
+
+function cardClasses(product: DisplayProduct) {
+  const classes = [
+    'group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition duration-200 ease-out transition-transform transition-shadow focus-within:ring-2 focus-within:ring-primary-200 motion-safe:hover:-translate-y-1 hover:border-slate-300 motion-safe:hover:shadow-lg motion-safe:active:shadow-sm',
+  ]
+
+  if (isPreviewActive.value && previewCategory.value) {
+    if (product.category === previewCategory.value) {
+      classes.push('border-primary-200/80 shadow-[0_18px_45px_-26px_rgba(79,114,242,0.65)]')
+    } else {
+      classes.push('opacity-60 saturate-[0.85]')
+    }
+  }
+
+  return classes
+}
+
+function isAddingToCart(id: number) {
+  return addToCartPendingIds.value.includes(id)
+}
+
+function setAddToCartPending(id: number, value: boolean) {
+  addToCartPendingIds.value = value
+    ? Array.from(new Set([...addToCartPendingIds.value, id]))
+    : addToCartPendingIds.value.filter((item) => item !== id)
+}
+
+watch(
+  () => selectedCategory.value,
+  () => {
+    previewCategory.value = null
+  },
+)
 </script>

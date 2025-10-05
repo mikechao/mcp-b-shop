@@ -13,17 +13,22 @@
         >
       </NuxtLink>
 
-      <form class="flex flex-1 items-center justify-center" @submit.prevent="onSubmit">
-        <div class="flex w-full max-w-2xl items-center gap-2">
+      <form class="flex flex-1 flex-col items-center justify-center" @submit.prevent="onSubmit">
+        <div
+          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200"
+          :class="searchShellClasses"
+        >
           <UInput
             ref="searchField"
             v-model="query"
             aria-label="Search products"
             class="flex-1"
             icon="i-heroicons-magnifying-glass-20-solid"
-            input-class="rounded-full"
-            placeholder="Search products"
+            input-class="rounded-full border-none bg-transparent focus:ring-0"
+            :placeholder="searchPlaceholder"
             size="lg"
+            @focus="handleSearchFocus"
+            @blur="handleSearchBlur"
           />
           <UButton
             type="submit"
@@ -45,6 +50,12 @@
             />
           </UTooltip>
         </div>
+        <p
+          v-if="searchInventoryHint"
+          class="mt-2 w-full max-w-2xl text-left text-xs font-medium text-slate-500 md:hidden"
+        >
+          {{ searchInventoryHint }}
+        </p>
       </form>
 
       <UTooltip text="View cart">
@@ -100,6 +111,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  productCount: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const emit = defineEmits<{
@@ -109,6 +124,7 @@ const emit = defineEmits<{
 }>()
 
 const searchField = ref()
+const isSearchFocused = ref(false)
 
 const query = computed({
   get: () => props.modelValue,
@@ -116,6 +132,25 @@ const query = computed({
 })
 
 const showCartBadge = computed(() => props.cartCount > 0)
+const searchShellClasses = computed(() =>
+  isSearchFocused.value
+    ? 'border-primary-200/80 bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)]'
+    : 'border-slate-200/60 bg-white/80',
+)
+const searchPlaceholder = computed(() =>
+  query.value
+    ? 'Search products'
+    : 'Search products (press /)',
+)
+const searchInventoryHint = computed(() => {
+  if (props.productCount > 0) {
+    const noun = props.productCount === 1 ? 'product' : 'products'
+    const suffix = props.productCount >= 20 ? '+' : ''
+    return `Search ${props.productCount}${suffix} ${noun}`
+  }
+
+  return 'Search our catalogue'
+})
 
 function focusSearch() {
   const input = searchField.value?.inputRef as HTMLInputElement | undefined
@@ -149,4 +184,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown, { capture: true })
 })
+
+function handleSearchFocus() {
+  isSearchFocused.value = true
+}
+
+function handleSearchBlur() {
+  isSearchFocused.value = false
+}
 </script>

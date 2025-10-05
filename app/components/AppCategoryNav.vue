@@ -1,5 +1,9 @@
 <template>
-  <nav aria-label="Product categories" class="flex flex-col gap-4">
+  <nav
+    aria-label="Product categories"
+    class="flex flex-col gap-4"
+    @mouseleave="handlePreview(null)"
+  >
     <div>
       <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Categories</p>
     </div>
@@ -11,6 +15,10 @@
           :class="buttonClasses(category.id)"
           :aria-current="isActive(category.id) ? 'page' : undefined"
           @click="handleSelect(category.id)"
+          @mouseenter="handlePreview(category.id)"
+          @mouseleave="handlePreview(null)"
+          @focus="handlePreview(category.id)"
+          @blur="handlePreview(null)"
         >
           <span class="flex items-center gap-2">
             <span :class="iconClasses(category.id)">
@@ -46,6 +54,8 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: string): void
+  (event: 'preview', value: string | null): void
+  (event: 'selected', value: string): void
 }>()
 
 const categoryList = computed(() => props.categories)
@@ -58,6 +68,8 @@ function handleSelect(id: string) {
   if (!isActive(id)) {
     emit('update:modelValue', id)
   }
+
+  emit('selected', id)
 }
 
 function buttonClasses(id: string) {
@@ -73,5 +85,9 @@ function iconClasses(id: string) {
       ? 'bg-primary-100 text-primary-600'
       : 'bg-slate-100',
   ]
+}
+
+function handlePreview(id: string | null) {
+  emit('preview', id)
 }
 </script>

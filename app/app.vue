@@ -6,6 +6,7 @@
     <AppHeader
       v-model="searchQuery"
       :cart-count="cartCount"
+      :product-count="productInventoryCount"
       @search="handleSearch"
       @open-cart="handleOpenCart"
     />
@@ -17,6 +18,8 @@
             <AppCategoryNav
               v-model="selectedCategory"
               :categories="categoryOptions"
+              @preview="handleCategoryPreview"
+              @selected="handleCategorySelected"
             />
           </div>
         </aside>
@@ -39,12 +42,16 @@
             <template #title>
               Browse categories
             </template>
-            <div class="px-4 pb-6 pt-4">
-              <AppCategoryNav
-                v-model="selectedCategory"
-                :categories="categoryOptions"
-              />
-            </div>
+            <template #body>
+              <div class="px-4 pb-6 pt-4">
+                <AppCategoryNav
+                  v-model="selectedCategory"
+                  :categories="categoryOptions"
+                  @preview="handleCategoryPreview"
+                  @selected="handleCategorySelected"
+                />
+              </div>
+            </template>
           </USlideover>
 
           <div class="flex-1 px-4 pb-10 pt-6 sm:px-6 lg:px-8">
@@ -65,11 +72,13 @@ const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women'
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
 const cartCount = useState('cart-count', () => 0)
+const previewCategory = useState<string | null>('category-preview', () => null)
 
 const isCategoryDrawerOpen = ref(false)
 
 const { categories: apiCategories } = useFakeStoreCategories()
 const { products: allProducts } = useFakeStoreProducts()
+const productInventoryCount = computed(() => allProducts.value.length)
 
 const categoryCounts = computed(() => {
   const counts = new Map<string, number>()
@@ -163,5 +172,33 @@ function formatCategoryLabel(value: string) {
     .split(' ')
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
     .join(' ')
+}
+
+function handleCategoryPreview(id: string | null) {
+  previewCategory.value = id
+}
+
+function handleCategorySelected() {
+  previewCategory.value = null
+  isCategoryDrawerOpen.value = false
+  scrollToProductGrid()
+}
+
+function scrollToProductGrid() {
+  if (!process.client) {
+    return
+  }
+
+  window.requestAnimationFrame(() => {
+    const target = document.getElementById('product-grid')
+
+    if (!target) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    const top = Math.max(target.getBoundingClientRect().top + window.scrollY - 88, 0)
+    window.scrollTo({ top, behavior: 'smooth' })
+  })
 }
 </script>

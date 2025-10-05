@@ -49,6 +49,7 @@ export function useFakeStoreProducts(options: UseFakeStoreProductsOptions = {}) 
       default: () => [],
       server: true,
       lazy: false,
+      watch: [normalizedCategory],
     },
   )
 

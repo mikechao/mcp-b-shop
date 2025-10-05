@@ -75,3 +75,34 @@
     outline: none;
   }
 }
+
+/* Dev fix: ensure overlay/dialog/slideovers render above the sticky header
+   Nuxt UI uses teleported overlays; sometimes their z-index is lower than
+   app header (z-50). Increase z-index to ensure visibility. */
+[role="dialog"],
+.u-slideover,
+.u-overlay,
+.u-modal,
+.nuxt-ui-overlay,
+.slideover,
+.modal {
+  z-index: 9990 !important;
+}
+
+/* Target common teleported overlay container used by Nuxt UI
+   - Force visible, ensure transform doesn't keep it off-screen when opened
+   - Keep selector narrow to avoid surprising global effects */
+div[class*="overlay"],
+div[class*="slideover"],
+[data-overlay="true"],
+[data-overlay] {
+  z-index: 9990 !important;
+}
+
+/* If the slideover is animated using translateX, override while open */
+.nuxt-ui-overlay[aria-hidden="false"],
+[data-overlay][aria-hidden="false"] {
+  transform: none !important;
+  opacity: 1 !important;
+  right: 0 !important;
+}

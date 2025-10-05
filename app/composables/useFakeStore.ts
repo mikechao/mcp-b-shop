@@ -1,6 +1,6 @@
 import type { MaybeRefOrGetter } from 'vue'
-import { computed, toValue } from 'vue'
 import type { FakeStoreProduct } from '~/types/fake-store'
+import { computed, toValue } from 'vue'
 import { fakeStoreProducts } from '../data/fakeStoreFallback'
 
 const DEFAULT_BASE_URL = 'https://fakestoreapi.com'
@@ -10,11 +10,11 @@ function resolveFallbackProducts(category: string | null) {
     return fakeStoreProducts
   }
 
-  return fakeStoreProducts.filter((product) => product.category === category)
+  return fakeStoreProducts.filter(product => product.category === category)
 }
 
 function resolveFallbackCategories() {
-  return Array.from(new Set(fakeStoreProducts.map((product) => product.category)))
+  return Array.from(new Set(fakeStoreProducts.map(product => product.category)))
 }
 
 export interface UseFakeStoreProductsOptions {
@@ -46,8 +46,9 @@ export function useFakeStoreProducts(options: UseFakeStoreProductsOptions = {}) 
     async () => {
       try {
         return await $fetch<FakeStoreProduct[]>(`${baseURL}${endpoint.value}`)
-      } catch (fetchError) {
-        if (process.dev) {
+      }
+      catch (fetchError) {
+        if (import.meta.env.DEV) {
           console.warn('[FakeStore] Falling back to bundled product data.', fetchError)
         }
         return resolveFallbackProducts(normalizedCategory.value)
@@ -80,8 +81,9 @@ export function useFakeStoreCategories() {
     async () => {
       try {
         return await $fetch<string[]>(`${baseURL}/products/categories`)
-      } catch (fetchError) {
-        if (process.dev) {
+      }
+      catch (fetchError) {
+        if (import.meta.env.DEV) {
           console.warn('[FakeStore] Falling back to bundled category data.', fetchError)
         }
         return resolveFallbackCategories()

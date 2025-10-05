@@ -1,5 +1,5 @@
 <template>
-  <UApp>
+  <UApp @open-cart="handleOpenCart">
     <AppSkipLink />
     <NuxtRouteAnnouncer />
 
@@ -204,4 +204,7 @@ function scrollToProductGrid() {
     window.scrollTo({ top, behavior: 'smooth' })
   })
 }
+
+// Dev helper: attach a function to window to add a sample item to cart for testing
+// (dev helpers removed)
 </script>

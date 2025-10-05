@@ -59,12 +59,12 @@
       </form>
 
       <UTooltip text="View cart">
-        <UButton
-          variant="outline"
-          color="brand"
-          class="relative hidden min-w-max items-center gap-2 md:inline-flex"
-          @click="emit('open-cart')"
-        >
+          <UButton
+            variant="outline"
+            color="brand"
+            class="relative hidden min-w-max items-center gap-2 md:inline-flex"
+            @click="emitOpenCart"
+          >
           <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
           <span class="hidden text-sm font-medium md:inline">Cart</span>
           <span
@@ -84,7 +84,7 @@
           square
           class="relative md:hidden"
           aria-label="View cart"
-          @click="emit('open-cart')"
+          @click="emitOpenCart"
         >
           <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
           <span
@@ -191,5 +191,9 @@ function handleSearchFocus() {
 
 function handleSearchBlur() {
   isSearchFocused.value = false
+}
+
+function emitOpenCart() {
+  emit('open-cart')
 }
 </script>

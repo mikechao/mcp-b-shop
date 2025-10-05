@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
 import type { FakeStoreProduct } from '~/types/fake-store'
+import { defineStore } from 'pinia'
 
 export interface CartItem {
   id: number
@@ -35,16 +35,16 @@ export const useCartStore = defineStore('cart', {
     items: [] as CartItem[],
   }),
   getters: {
-    totalQuantity: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: (state) => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    isEmpty: (state) => state.items.length === 0,
-    getItemQuantity: (state) => (id: number) =>
-      state.items.find((item) => item.id === id)?.quantity ?? 0,
+    totalQuantity: state => state.items.reduce((sum, item) => sum + item.quantity, 0),
+    totalPrice: state => state.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    isEmpty: state => state.items.length === 0,
+    getItemQuantity: state => (id: number) =>
+      state.items.find(item => item.id === id)?.quantity ?? 0,
   },
   actions: {
     addItem(product: CartItemPayload | FakeStoreProduct) {
       const payload = resolvePayload(product)
-      const existing = this.items.find((item) => item.id === payload.id)
+      const existing = this.items.find(item => item.id === payload.id)
 
       if (existing) {
         existing.quantity += 1
@@ -59,7 +59,7 @@ export const useCartStore = defineStore('cart', {
       return 1
     },
     increaseQuantity(id: number) {
-      const item = this.items.find((entry) => entry.id === id)
+      const item = this.items.find(entry => entry.id === id)
       if (!item) {
         return
       }
@@ -67,7 +67,7 @@ export const useCartStore = defineStore('cart', {
       item.quantity += 1
     },
     decreaseQuantity(id: number) {
-      const item = this.items.find((entry) => entry.id === id)
+      const item = this.items.find(entry => entry.id === id)
       if (!item) {
         return
       }
@@ -80,7 +80,7 @@ export const useCartStore = defineStore('cart', {
       item.quantity -= 1
     },
     removeItem(id: number) {
-      this.items = this.items.filter((item) => item.id !== id)
+      this.items = this.items.filter(item => item.id !== id)
     },
     clear() {
       this.items = []

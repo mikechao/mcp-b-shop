@@ -14,19 +14,7 @@
         >
           <span class="flex items-center gap-2">
             <span :class="iconClasses(category.id)">
-              <img
-                v-if="category.image"
-                :src="category.image"
-                alt=""
-                class="h-full w-full object-cover"
-                loading="lazy"
-              >
-              <UIcon
-                v-else
-                :name="category.icon ?? 'i-heroicons-tag'"
-                class="size-4"
-                aria-hidden="true"
-              />
+              <component :is="category.icon" />
             </span>
             <span class="truncate">{{ category.label }}</span>
           </span>
@@ -43,10 +31,12 @@
 </template>
 
 <script setup lang="ts">
+import { Gem, Icon } from 'lucide-vue-next';
+
 type Category = {
   id: string
   label: string
-  icon?: string
+  icon?: any
   image?: string
   count?: number
 }

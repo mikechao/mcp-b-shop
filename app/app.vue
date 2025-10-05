@@ -57,10 +57,13 @@
 </template>
 
 <script setup lang="ts">
+import { Computer, Gem, Grip, Icon, Venus } from 'lucide-vue-next';
+import { Mars } from 'lucide-vue-next';
+
 type CategoryOption = {
   id: string
   label: string
-  icon?: string
+  icon?: any
   image?: string
   count?: number
 }
@@ -115,7 +118,7 @@ const categoryOptions = computed<CategoryOption[]>(() => {
     {
       id: 'all',
       label: 'All products',
-      icon: 'i-heroicons-squares-2x2',
+      icon: Grip,
       count: totalCount > 0 ? totalCount : undefined,
     },
     ...mapped,
@@ -145,22 +148,22 @@ function createCategoryOption(slug: string): CategoryOption {
   const label = formatCategoryLabel(slug)
 
   if (slug === "men's clothing") {
-    return { id: slug, label, image: '/mens-clothing.webp' }
+    return { id: slug, label, icon: Mars }
   }
 
   if (slug === "women's clothing") {
-    return { id: slug, label, image: '/womens-clothing.webp' }
+    return { id: slug, label, icon: Venus }
   }
 
   if (slug === 'electronics') {
-    return { id: slug, label, icon: 'i-heroicons-computer-desktop' }
+    return { id: slug, label, icon: Computer }
   }
 
   if (slug === 'jewelery') {
-    return { id: slug, label, icon: 'i-heroicons-sparkles' }
+    return { id: slug, label, icon: Gem }
   }
 
-  return { id: slug, label, icon: 'i-heroicons-tag' }
+  return { id: slug, label, icon: Gem }
 }
 
 function formatCategoryLabel(value: string) {

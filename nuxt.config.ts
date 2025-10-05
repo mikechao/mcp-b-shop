@@ -18,6 +18,6 @@ export default defineNuxtConfig({
     },
   },
   alias: {
-    types: fileURLToPath(new URL('./apps/types', import.meta.url)),
+    types: fileURLToPath(new URL('./app/types', import.meta.url)),
   },
 })

@@ -60,21 +60,28 @@
         </main>
       </div>
     </div>
+
+    <AppCartDrawer v-model="isCartDrawerOpen" />
   </UApp>
 </template>
 
 <script setup lang="ts">
 import { Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
 import type { ProductCategory } from '~/types/category';
+import AppCartDrawer from './components/AppCartDrawer.vue';
+import { useCartStore } from './stores/cart';
 
 const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
 
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
-const cartCount = useState('cart-count', () => 0)
 const previewCategory = useState<string | null>('category-preview', () => null)
 
 const isCategoryDrawerOpen = ref(false)
+const isCartDrawerOpen = ref(false)
+
+const cartStore = useCartStore()
+const cartCount = computed(() => cartStore.totalQuantity)
 
 const { categories: apiCategories } = useFakeStoreCategories()
 const { products: allProducts } = useFakeStoreProducts()
@@ -138,11 +145,7 @@ function handleSearch(value: string) {
 }
 
 function handleOpenCart() {
-  toast.add({
-    title: 'Cart panel coming soon',
-    description: 'We will open the shopping cart in a future iteration.',
-    icon: 'i-heroicons-shopping-cart-20-solid',
-  })
+  isCartDrawerOpen.value = true
 }
 
 function createCategoryOption(slug: string): ProductCategory {

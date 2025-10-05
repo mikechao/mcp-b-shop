@@ -192,11 +192,12 @@
 
 <script setup lang="ts">
 import type { FakeStoreProduct } from '~/types/fake-store'
+import { useCartStore } from '../stores/cart'
 
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
-const cartCount = useState('cart-count', () => 0)
 const previewCategory = useState<string | null>('category-preview', () => null)
+const cartStore = useCartStore()
 
 const {
   products: rawProducts,
@@ -385,10 +386,19 @@ function handleAddToCart(product: DisplayProduct) {
   }
 
   setAddToCartPending(product.id, true)
-  cartCount.value += 1
+  const quantity = cartStore.addItem({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    image: product.image,
+    category: product.category,
+  })
   toast.add({
     title: 'Added to cart',
-    description: `${product.title} has been added to your cart.`,
+    description:
+      quantity > 1
+        ? `Updated quantity: ${quantity} × ${product.title}.`
+        : `${product.title} has been added to your cart.`,
     icon: 'i-heroicons-shopping-cart-20-solid',
   })
 

@@ -31,15 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { Gem, Icon } from 'lucide-vue-next';
-
-type Category = {
-  id: string
-  label: string
-  icon?: any
-  image?: string
-  count?: number
-}
+import type { ProductCategory } from '../types/category';
 
 const props = defineProps({
   modelValue: {
@@ -47,7 +39,7 @@ const props = defineProps({
     required: true,
   },
   categories: {
-    type: Array as PropType<Category[]>,
+    type: Array as PropType<ProductCategory[]>,
     default: () => [],
   },
 })

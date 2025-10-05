@@ -57,16 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import { Computer, Gem, Grip, Icon, Venus } from 'lucide-vue-next';
-import { Mars } from 'lucide-vue-next';
-
-type CategoryOption = {
-  id: string
-  label: string
-  icon?: any
-  image?: string
-  count?: number
-}
+import { Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
+import type { ProductCategory } from './types/category';
 
 const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
 
@@ -90,7 +82,7 @@ const categoryCounts = computed(() => {
   return counts
 })
 
-const categoryOptions = computed<CategoryOption[]>(() => {
+const categoryOptions = computed<ProductCategory[]>(() => {
   const baseCategories = apiCategories.value.length ? apiCategories.value : [...DEFAULT_CATEGORIES]
   const seen = new Set<string>()
 
@@ -144,7 +136,7 @@ function handleOpenCart() {
   })
 }
 
-function createCategoryOption(slug: string): CategoryOption {
+function createCategoryOption(slug: string): ProductCategory {
   const label = formatCategoryLabel(slug)
 
   if (slug === "men's clothing") {

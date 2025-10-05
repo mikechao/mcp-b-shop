@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -15,5 +16,8 @@ export default defineNuxtConfig({
     theme: {
       colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error', 'neutral', 'brand', 'accent'],
     },
+  },
+  alias: {
+    types: fileURLToPath(new URL('./apps/types', import.meta.url)),
   },
 })

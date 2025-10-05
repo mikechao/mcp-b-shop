@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ProductCategory } from '../types/category';
+import type { ProductCategory } from '~/types/category';
 
 const props = defineProps({
   modelValue: {

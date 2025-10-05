@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
-import type { ProductCategory } from './types/category';
+import type { ProductCategory } from '~/types/category';
 
 const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
 

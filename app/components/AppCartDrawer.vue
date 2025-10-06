@@ -1,5 +1,5 @@
 <template>
-  <USlideover v-model="isOpen" side="right" :overlay="true">
+  <USlideover v-model:open="isOpen" side="right" :overlay="true">
     <template #title>
       Shopping cart
     </template>

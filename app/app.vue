@@ -1,5 +1,5 @@
 <template>
-  <UApp @open-cart="handleOpenCart">
+  <UApp class="isolate">
     <AppSkipLink />
     <NuxtRouteAnnouncer />
 
@@ -38,7 +38,7 @@
             </UButton>
           </div>
 
-          <USlideover v-model="isCategoryDrawerOpen" side="left">
+          <USlideover v-model:open="isCategoryDrawerOpen" side="left">
             <template #title>
               Browse categories
             </template>
@@ -205,6 +205,4 @@ function scrollToProductGrid() {
   })
 }
 
-// Dev helper: attach a function to window to add a sample item to cart for testing
-// (dev helpers removed)
 </script>

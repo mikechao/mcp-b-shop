@@ -91,7 +91,8 @@ Perfect for those who appreciate beauty in simplicity, this lovely cat is affect
       ? { ...HARDCODED_PRODUCT, id: base.reduce((m, p) => Math.max(m, p.id), 0) + 1 }
       : HARDCODED_PRODUCT
 
-    return [...base, extra]
+    // Place the hardcoded product first so it appears at the top of the product grid.
+    return [extra, ...base]
   })
 
   return {

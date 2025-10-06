@@ -11,16 +11,6 @@
             {{ headingSubtitle }}
           </p>
         </div>
-        <UButton
-          color="neutral"
-          variant="soft"
-          icon="i-heroicons-arrow-path"
-          class="hidden sm:inline-flex"
-          :loading="productsPending"
-          @click="refreshProducts"
-        >
-          Refresh
-        </UButton>
       </div>
     </header>
 
@@ -146,16 +136,6 @@
             >
               Add to cart
             </UButton>
-            <UTooltip text="Save to favorites">
-              <UButton
-                color="neutral"
-                variant="ghost"
-                square
-                icon="i-heroicons-heart"
-                aria-label="Save to favorites"
-                @click="handleSaveToFavorites(product)"
-              />
-            </UTooltip>
           </div>
         </div>
       </article>
@@ -405,14 +385,6 @@ function handleAddToCart(product: DisplayProduct) {
   window.setTimeout(() => {
     setAddToCartPending(product.id, false)
   }, 400)
-}
-
-function handleSaveToFavorites(product: DisplayProduct) {
-  toast.add({
-    title: 'Saved for later',
-    description: `${product.title} is now in your favorites.`,
-    icon: 'i-heroicons-heart',
-  })
 }
 
 function clearCategoryFilter() {

@@ -79,6 +79,24 @@
   }
 }
 
+/* Ensure interactive native/button elements show pointer cursor.
+   Some utilities injected via `app.config.ts` might not be picked up by
+   the Tailwind scanner, so provide a small, safe fallback here. */
+@layer base {
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [disabled],
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 /* Fix for overlay/slideover visibility issues
    
    Issue: Nuxt UI v4 uses Reka UI which teleports overlays to portal containers.

@@ -1,3 +1,5 @@
+import { defineAppConfig } from 'nuxt/app'
+
 export default defineAppConfig({
   ui: {
     colors: {
@@ -7,7 +9,7 @@ export default defineAppConfig({
     },
     button: {
       slots: {
-        base: 'rounded-[var(--radius-base)]',
+        base: 'rounded-[var(--radius-base)] cursor-pointer',
       },
     },
     input: {

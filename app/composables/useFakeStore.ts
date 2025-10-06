@@ -65,7 +65,7 @@ export function useFakeStoreProducts(options: UseFakeStoreProductsOptions = {}) 
   // A hardcoded product that should be visible to callers of useFakeStoreProducts.
   // We append it to the fetched/fallback list. It will only be included when the
   // current category filter matches the product's category (or when no category is set).
-  const HARDCODED_PRODUCT: FakeStoreProduct = {
+  const james: FakeStoreProduct = {
     id: 99999,
     title: 'James the Orange Cat',
     price: 999999.99,
@@ -76,23 +76,45 @@ Perfect for those who appreciate beauty in simplicity, this lovely cat is affect
     rating: { rate: 5, count: 999999 },
   }
 
+  const luna: FakeStoreProduct = {
+    id: 99998,
+    title: 'Nightmeow on Elm Street',
+    price: 49.99,
+    description: `This mischievous little furball is ready to claw its way into your nightmares—adorably, of course. Featuring a fiery orange tabby dressed in the iconic striped sweater, fedora, and razor-sharp claws, this design is a purr-fect mashup of horror and humor.
+Whether you’re a horror movie buff, a cat lover, or both, this tee will scratch that itch for quirky, spooky style. Soft, durable, and guaranteed to get laughs (and maybe a few uneasy stares), it’s a must-have for Halloween season or any day you want to unleash your inner nightmare.`,
+    category: 'cats',
+    image: '/images/kittykruger.webp',
+    rating: { rate: 4.9, count: 1234 },
+  }
+
   const productsWithExtra = computed(() => {
     const base = data.value ?? []
 
     // Respect category filter: if a specific category is selected and it doesn't
-    // match the hardcoded product, return the base list unchanged.
-    if (normalizedCategory.value && normalizedCategory.value !== HARDCODED_PRODUCT.category) {
+    // match the hardcoded products' category, return the base list unchanged.
+    if (normalizedCategory.value && normalizedCategory.value !== james.category) {
       return base
     }
 
-    // Ensure no id collision with existing products
-    const hasCollision = base.some(p => p.id === HARDCODED_PRODUCT.id)
-    const extra = hasCollision
-      ? { ...HARDCODED_PRODUCT, id: base.reduce((m, p) => Math.max(m, p.id), 0) + 1 }
-      : HARDCODED_PRODUCT
+    // Build extras array with collision-safe ids
+    const maxId = base.reduce((m, p) => Math.max(m, p.id), 0)
 
-    // Place the hardcoded product first so it appears at the top of the product grid.
-    return [extra, ...base]
+    const extras: FakeStoreProduct[] = []
+
+    const addCollisionSafe = (prod: FakeStoreProduct, offset: number) => {
+      if (base.some(p => p.id === prod.id) || extras.some(p => p.id === prod.id)) {
+        extras.push({ ...prod, id: maxId + offset })
+      }
+      else {
+        extras.push(prod)
+      }
+    }
+
+    addCollisionSafe(james, 1)
+    addCollisionSafe(luna, 2)
+
+    // Place the hardcoded products first (in desired order) so they appear at the top of the product grid.
+    return [...extras, ...base]
   })
 
   return {

@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
+import { Cat, Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
 import type { ProductCategory } from '~/types/category';
 import AppCartDrawer from './components/AppCartDrawer.vue';
 import { useCartStore } from './stores/cart';
@@ -165,6 +165,10 @@ function createCategoryOption(slug: string): ProductCategory {
 
   if (slug === 'jewelery') {
     return { id: slug, label, icon: Gem }
+  }
+
+  if (slug === 'cats') {
+    return { id: slug, label, icon: Cat }
   }
 
   return { id: slug, label, icon: Gem }

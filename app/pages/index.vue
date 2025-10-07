@@ -171,6 +171,8 @@
 </template>
 
 <script setup lang="ts">
+import Fuse from 'fuse.js'
+import type { IFuseOptions } from 'fuse.js'
 import type { FakeStoreProduct } from '~/types/fake-store'
 import { useCartStore } from '../stores/cart'
 
@@ -192,7 +194,6 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 2,
 })
 
-const searchTerm = computed(() => searchQuery.value.trim().toLowerCase())
 const searchQueryDisplay = computed(() => searchQuery.value.trim())
 const isSearchFiltered = computed(() => searchQueryDisplay.value.length > 0)
 const isCategoryFiltered = computed(() => selectedCategory.value && selectedCategory.value !== 'all')
@@ -202,19 +203,22 @@ const filteredCategoryLabel = computed(() =>
 )
 const productGridClasses = 'grid gap-5 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]'
 
+const fuseOptions: IFuseOptions<FakeStoreProduct> = {
+  keys: ['title', 'description', 'category'],
+  ignoreLocation: true,
+  threshold: 0.35,
+}
+
+const fuse = computed(() => new Fuse(rawProducts.value, fuseOptions))
+
 const filteredProducts = computed<FakeStoreProduct[]>(() => {
-  const query = searchTerm.value
+  const query = searchQueryDisplay.value
 
   if (!query) {
     return rawProducts.value
   }
 
-  return rawProducts.value.filter((product) => {
-    const title = product.title?.toLowerCase() ?? ''
-    const description = product.description?.toLowerCase() ?? ''
-
-    return title.includes(query) || description.includes(query)
-  })
+  return fuse.value.search(query).map(result => result.item)
 })
 
 interface DisplayProduct {

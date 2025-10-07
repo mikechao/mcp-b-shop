@@ -215,7 +215,7 @@ onBeforeMount(async () => {
   try {
     const { server } = await useMcpServer();
     // Pass the drawer ref and a getter for cartCount to the helper which will register tools
-    registerCartTools(server, isCartDrawerOpen, () => cartCount.value);
+    registerCartTools(server, isCartDrawerOpen);
   } catch (error) {
     console.error('Error trying to useMcpServer on app.vue', error);
   }

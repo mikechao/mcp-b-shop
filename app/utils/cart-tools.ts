@@ -16,7 +16,7 @@ const cartActionSchema = z.enum(CART_ACTIONS)
 const openCartSchema = z.object({})
 const closeCartSchema = z.object({})
 
-export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boolean>, getCartCount: () => number) {
+export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boolean>) {
   server.registerTool(
     'shopping_cart_operations',
     {
@@ -30,8 +30,11 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
       switch (action as CartAction) {
         case 'openCart': {
           isCartDrawerOpen.value = true
+          const cart = useCartStore()
+          const totalItems = cart.items.length
+          const cartContents = totalItems > 0 ? `Contains the following items:\n ${cart.items.map(item => `${JSON.stringify(item)}`).join(', ')}` : 'Cart is empty'
           return {
-            content: [{ type: 'text', text: `Shopping Cart opened with ${getCartCount()} items` }],
+            content: [{ type: 'text', text: `Shopping Cart opened. ${cartContents}` }],
           }
         }
         case 'closeCart': {

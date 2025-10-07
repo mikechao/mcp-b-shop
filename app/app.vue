@@ -70,6 +70,7 @@ import { Cat, Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
 import type { ProductCategory } from '~/types/category';
 import AppCartDrawer from './components/AppCartDrawer.vue';
 import { useCartStore } from './stores/cart';
+import { useMcpServer } from './composables/useMcpServer';
 
 const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
 
@@ -208,5 +209,20 @@ function scrollToProductGrid() {
     window.scrollTo({ top, behavior: 'smooth' })
   })
 }
+
+onBeforeMount(async () => {
+  try {
+    const { server } = await useMcpServer();
+    server.tool('openCart', 'opens the shopping cart', {}, async () => {
+      isCartDrawerOpen.value = true;
+      return {
+        content: [{ type: 'text', text: 'Shopping Cart opened' }],
+      }
+    })
+  
+  } catch (error) {
+    console.error('Error trying to useMcpServer on app.vue', error);
+  }
+})
 
 </script>

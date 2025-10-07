@@ -86,7 +86,7 @@ async function createServerInstance(): Promise<McpServer> {
     const config = useRuntimeConfig()
     const allowedOrigins = typeof config.public?.mcpAllowedOrigins === 'string'
       ? config.public.mcpAllowedOrigins.split(',')
-      : ['http://localhost:3000'] // Safe default
+      : ['http://localhost:3000', 'http://localhost:3001'] // Safe default
 
     const transport = new TabServerTransport({
       allowedOrigins,

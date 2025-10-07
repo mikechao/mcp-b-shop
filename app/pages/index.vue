@@ -171,14 +171,16 @@
 </template>
 
 <script setup lang="ts">
-import Fuse from 'fuse.js'
-import type { IFuseOptions } from 'fuse.js'
 import type { FakeStoreProduct } from '~/types/fake-store'
+import { useMcpServer } from '../composables/useMcpServer'
+import { searchFakeStoreProducts } from '../utils/product-search'
+import { registerSearchTools } from '../utils/search-tools'
 import { useCartStore } from '../stores/cart'
 
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
 const previewCategory = useState<string | null>('category-preview', () => null)
+const hasRegisteredSearchTool = useState('search-products-tool-registered', () => false)
 const cartStore = useCartStore()
 
 const {
@@ -203,23 +205,9 @@ const filteredCategoryLabel = computed(() =>
 )
 const productGridClasses = 'grid gap-5 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]'
 
-const fuseOptions: IFuseOptions<FakeStoreProduct> = {
-  keys: ['title', 'description', 'category'],
-  ignoreLocation: true,
-  threshold: 0.35,
-}
-
-const fuse = computed(() => new Fuse(rawProducts.value, fuseOptions))
-
-const filteredProducts = computed<FakeStoreProduct[]>(() => {
-  const query = searchQueryDisplay.value
-
-  if (!query) {
-    return rawProducts.value
-  }
-
-  return fuse.value.search(query).map(result => result.item)
-})
+const filteredProducts = computed<FakeStoreProduct[]>(() =>
+  searchFakeStoreProducts(rawProducts.value, searchQueryDisplay.value),
+)
 
 interface DisplayProduct {
   id: number
@@ -357,6 +345,17 @@ const productsErrorMessage = computed(
 
 const toast = useToast()
 
+function applySearchQueryFromTool(value: string) {
+  const normalized = value.trim()
+
+  searchQuery.value = normalized
+  toast.add({
+    title: 'Search submitted',
+    description: normalized ? `Looking for “${normalized}”` : 'Showing all products',
+    icon: 'i-heroicons-magnifying-glass-20-solid',
+  })
+}
+
 function handleResetFilters() {
   searchQuery.value = ''
   selectedCategory.value = 'all'
@@ -434,4 +433,22 @@ watch(
     previewCategory.value = null
   },
 )
+
+onBeforeMount(async () => {
+  if (hasRegisteredSearchTool.value) {
+    return
+  }
+
+  try {
+    const { server } = await useMcpServer()
+    registerSearchTools(server, {
+      getProducts: () => rawProducts.value,
+      applySearchQuery: applySearchQueryFromTool,
+    })
+    hasRegisteredSearchTool.value = true
+  }
+  catch (error) {
+    console.error('Error registering MCP search tool', error)
+  }
+})
 </script>

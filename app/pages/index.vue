@@ -27,7 +27,7 @@
           {{ filteredCategoryLabel }}
           <button
             type="button"
-            class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+            class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
             @click="clearCategoryFilter"
           >
             <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
@@ -41,7 +41,7 @@
           “{{ searchQueryDisplay }}”
           <button
             type="button"
-            class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+            class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
             @click="clearSearchFilter"
           >
             <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />

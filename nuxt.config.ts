@@ -20,4 +20,16 @@ export default defineNuxtConfig({
   alias: {
     types: fileURLToPath(new URL('./app/types', import.meta.url)),
   },
+  vite: {
+    optimizeDeps: {
+      include: [
+        'fuse.js',
+        'lucide-vue-next',
+        'zod',
+        'zod-to-json-schema',
+        '@mcp-b/transports',
+        '@modelcontextprotocol/sdk/server/mcp.js',
+      ],
+    },
+  },
 })

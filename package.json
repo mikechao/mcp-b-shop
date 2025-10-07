@@ -11,6 +11,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@mcp-b/transports": "^1.0.3",
+    "@modelcontextprotocol/sdk": "^1.19.1",
     "@nuxt/ui": "^4.0.1",
     "@pinia/nuxt": "0.11.2",
     "fuse.js": "^7.1.0",

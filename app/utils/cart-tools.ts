@@ -8,6 +8,7 @@ const CART_ACTIONS = [
   'openCart',
   'closeCart',
   'addProduct',
+  'removeProduct',
 ] as const
 
 type CartAction = typeof CART_ACTIONS[number]
@@ -33,6 +34,9 @@ const fakeStoreProductSchema = z.object({
 const addProductSchema = z.object({
   product: fakeStoreProductSchema,
 })
+const removeProductSchema = z.object({
+  product: fakeStoreProductSchema,
+})
 
 export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boolean>) {
   server.registerTool(
@@ -55,6 +59,10 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
         case 'addProduct': {
           const { product } = addProductSchema.parse(params)
           return handleAddProduct(product)
+        }
+        case 'removeProduct': {
+          const { product } = removeProductSchema.parse(params)
+          return handleRemoveProduct(product)
         }
       }
     },
@@ -100,6 +108,15 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
             content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
           }
         }
+        case 'removeProduct': {
+          const paramsAndDescription = {
+            params: toJson(removeProductSchema, 'removeProductParams'),
+            description: 'Removes the provided FakeStore product from the shopping cart if it exists',
+          }
+          return {
+            content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
+          }
+        }
       }
     },
   )
@@ -130,6 +147,29 @@ function handleAddProduct(product: FakeStoreProduct) {
     content: [{
       type: 'text' as const,
       text: `Added "${product.title}" to the shopping cart. Quantity in cart: ${quantity}. Total items across cart: ${totalItems}.`,
+    }],
+  }
+}
+
+function handleRemoveProduct(product: FakeStoreProduct) {
+  const cart = useCartStore()
+  const existingQuantity = cart.getItemQuantity(product.id)
+
+  if (existingQuantity === 0) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `No "${product.title}" product found in the shopping cart to remove.`,
+      }],
+    }
+  }
+
+  cart.removeItem(product.id)
+  const totalItems = cart.totalQuantity
+  return {
+    content: [{
+      type: 'text' as const,
+      text: `Removed "${product.title}" from the shopping cart. Items removed: ${existingQuantity}. Total items remaining: ${totalItems}.`,
     }],
   }
 }

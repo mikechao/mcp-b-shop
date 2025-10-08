@@ -29,19 +29,10 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
     async ({ action, params = {} }) => {
       switch (action as CartAction) {
         case 'openCart': {
-          isCartDrawerOpen.value = true
-          const cart = useCartStore()
-          const totalItems = cart.items.length
-          const cartContents = totalItems > 0 ? `Contains the following items:\n ${cart.items.map(item => `${JSON.stringify(item)}`).join(', ')}` : 'Cart is empty'
-          return {
-            content: [{ type: 'text', text: `Shopping Cart opened. ${cartContents}` }],
-          }
+          return handleOpenCart(isCartDrawerOpen)
         }
         case 'closeCart': {
-          isCartDrawerOpen.value = false
-          return {
-            content: [{ type: 'text', text: `Shopping Cart closed` }],
-          }
+          return handleCloseCart(isCartDrawerOpen)
         }
       }
     },
@@ -81,4 +72,21 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
       }
     },
   )
+}
+
+function handleOpenCart(isCartDrawerOpen: Ref<boolean>) {
+  isCartDrawerOpen.value = true
+  const cart = useCartStore()
+  const totalItems = cart.items.length
+  const cartContents = totalItems > 0 ? `Contains the following items:\n ${cart.items.map(item => `${JSON.stringify(item)}`).join(', ')}` : 'Cart is empty'
+  return {
+    content: [{ type: 'text' as const, text: `Shopping Cart opened. ${cartContents}` }],
+  }
+}
+
+function handleCloseCart(isCartDrawerOpen: Ref<boolean>) {
+  isCartDrawerOpen.value = false
+  return {
+    content: [{ type: 'text' as const, text: 'Shopping Cart closed' }],
+  }
 }

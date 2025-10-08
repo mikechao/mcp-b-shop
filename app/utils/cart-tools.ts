@@ -1,11 +1,13 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { Ref } from 'vue'
+import type { FakeStoreProduct } from '~/types/fake-store'
 import z from 'zod'
 import zodToJsonSchema from 'zod-to-json-schema'
 
 const CART_ACTIONS = [
   'openCart',
   'closeCart',
+  'addProduct',
 ] as const
 
 type CartAction = typeof CART_ACTIONS[number]
@@ -15,6 +17,22 @@ const cartActionSchema = z.enum(CART_ACTIONS)
 // schemas
 const openCartSchema = z.object({})
 const closeCartSchema = z.object({})
+const fakeStoreRatingSchema = z.object({
+  rate: z.number(),
+  count: z.number(),
+})
+const fakeStoreProductSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  price: z.number(),
+  description: z.string(),
+  category: z.string(),
+  image: z.string(),
+  rating: fakeStoreRatingSchema.optional(),
+})
+const addProductSchema = z.object({
+  product: fakeStoreProductSchema,
+})
 
 export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boolean>) {
   server.registerTool(
@@ -34,6 +52,10 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
         case 'closeCart': {
           return handleCloseCart(isCartDrawerOpen)
         }
+        case 'addProduct': {
+          const { product } = addProductSchema.parse(params)
+          return handleAddProduct(product)
+        }
       }
     },
   )
@@ -48,7 +70,7 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
     },
     async ({ action }) => {
       const toJson = (schema: z.ZodTypeAny, name: string) => {
-        zodToJsonSchema(schema, { name, $refStrategy: 'none' })
+        return zodToJsonSchema(schema, { name, $refStrategy: 'none' })
       }
       switch (action as CartAction) {
         case 'openCart': {
@@ -64,6 +86,15 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
           const paramsAndDescription = {
             params: toJson(closeCartSchema, 'closeCartParams'),
             description: 'Closes the shopping cart drawer in the UI',
+          }
+          return {
+            content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
+          }
+        }
+        case 'addProduct': {
+          const paramsAndDescription = {
+            params: toJson(addProductSchema, 'addProductParams'),
+            description: 'Adds the provided FakeStore product to the shopping cart and updates its quantity',
           }
           return {
             content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
@@ -88,5 +119,17 @@ function handleCloseCart(isCartDrawerOpen: Ref<boolean>) {
   isCartDrawerOpen.value = false
   return {
     content: [{ type: 'text' as const, text: 'Shopping Cart closed' }],
+  }
+}
+
+function handleAddProduct(product: FakeStoreProduct) {
+  const cart = useCartStore()
+  const quantity = cart.addItem(product)
+  const totalItems = cart.totalQuantity
+  return {
+    content: [{
+      type: 'text' as const,
+      text: `Added "${product.title}" to the shopping cart. Quantity in cart: ${quantity}. Total items across cart: ${totalItems}.`,
+    }],
   }
 }

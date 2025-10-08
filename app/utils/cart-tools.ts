@@ -50,7 +50,7 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
   server.registerTool(
     'shopping_cart_parameters_description',
     {
-      description: 'Get the parameters for shopping_cart_operations tool and the description for the associated action. This is useful for understanding what parameters to pass when invoking the shopping_cart_operations tool.',
+      description: `Get the parameters for shopping_cart_operations tool and the description for the associated action. This is useful for understanding what parameters to pass when invoking the shopping_cart_operations tool. The following action are supported: ${CART_ACTIONS.join(', ')}`,
       inputSchema: {
         action: cartActionSchema,
       },

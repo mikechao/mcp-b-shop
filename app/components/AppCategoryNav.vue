@@ -11,7 +11,7 @@
       <li v-for="category in categoryList" :key="category.id">
         <button
           type="button"
-          class="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+          class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
           :class="buttonClasses(category.id)"
           :aria-current="isActive(category.id) ? 'page' : undefined"
           @click="handleSelect(category.id)"
@@ -20,7 +20,7 @@
           @focus="handlePreview(category.id)"
           @blur="handlePreview(null)"
         >
-          <span class="flex items-center gap-2">
+          <span class="flex min-w-0 items-center gap-2">
             <span :class="iconClasses(category.id)">
               <component :is="category.icon" />
             </span>
@@ -28,7 +28,7 @@
           </span>
           <span
             v-if="category.count !== undefined"
-            class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
+            class="ml-auto inline-flex items-center justify-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
           >
             {{ category.count }}
           </span>

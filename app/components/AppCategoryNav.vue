@@ -20,11 +20,11 @@
           @focus="handlePreview(category.id)"
           @blur="handlePreview(null)"
         >
-          <span class="flex min-w-0 items-center gap-2">
+          <span class="flex min-w-0 flex-1 items-center gap-2">
             <span :class="iconClasses(category.id)">
               <component :is="category.icon" />
             </span>
-            <span class="truncate">{{ category.label }}</span>
+            <span class="break-words text-left">{{ category.label }}</span>
           </span>
           <span
             v-if="category.count !== undefined"

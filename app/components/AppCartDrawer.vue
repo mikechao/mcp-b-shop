@@ -78,7 +78,7 @@
           <span>Subtotal</span>
           <span class="text-base font-semibold text-slate-900">{{ formatPrice(totalPrice) }}</span>
         </div>
-        <UButton color="primary" block icon="i-heroicons-credit-card" @click="close">
+        <UButton color="primary" block icon="i-heroicons-credit-card" @click="goToCheckout">
           Proceed to checkout
         </UButton>
         <UButton color="neutral" variant="ghost" block icon="i-heroicons-x-mark" @click="close">
@@ -105,6 +105,7 @@ const emit = defineEmits<{
 }>()
 
 const cartStore = useCartStore()
+const router = useRouter()
 
 const isOpen = computed({
   get: () => props.modelValue,
@@ -152,5 +153,10 @@ function formatCategoryLabel(value: string) {
     .split(' ')
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
     .join(' ')
+}
+
+function goToCheckout() {
+  close()
+  router.push('/checkout')
 }
 </script>

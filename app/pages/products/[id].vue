@@ -132,6 +132,7 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import { useCartStore } from '~/stores/cart'
+import { formatCategoryLabel } from '~/utils/category'
 
 const router = useRouter()
 const route = useRoute()
@@ -170,13 +171,6 @@ const ratingValue = computed(() =>
   product.value?.rating?.rate ? product.value.rating.rate.toFixed(1) : null,
 )
 const ratingCount = computed(() => product.value?.rating?.count ?? null)
-
-function formatCategoryLabel(value: string) {
-  return value
-    .split(' ')
-    .map(segment => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
-}
 
 const categoryLabel = computed(() =>
   product.value ? formatCategoryLabel(product.value.category) : 'Unknown category',

@@ -135,6 +135,7 @@
 
 <script setup lang='ts'>
 import { useCartStore } from '../stores/cart'
+import { formatCategoryLabel } from '~/utils/category'
 import type { CartItem } from '../stores/cart'
 
 const cartStore = useCartStore()
@@ -204,13 +205,6 @@ function formatPrice(value: number) {
 
 function roundCurrency(value: number) {
   return Math.round(value * 100) / 100
-}
-
-function formatCategoryLabel(value: string) {
-  return value
-    .split(' ')
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
 }
 
 function formatDate(value: string) {

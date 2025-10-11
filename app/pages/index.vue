@@ -17,42 +17,15 @@
         </div>
       </header>
 
-      <div
-        v-if="showFilterSummary"
-        class="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-sm shadow-slate-200/40"
-      >
-        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Active filters</span>
-        <div class="flex flex-wrap items-center gap-2">
-          <span
-            v-if="isCategoryFiltered"
-            class="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"
-          >
-            {{ filteredCategoryLabel }}
-            <button
-              type="button"
-              class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
-              @click="clearCategoryFilter"
-            >
-              <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
-              <span class="sr-only">Clear category filter</span>
-            </button>
-          </span>
-          <span
-            v-if="isSearchFiltered"
-            class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
-          >
-            “{{ searchQueryDisplay }}”
-            <button
-              type="button"
-              class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
-              @click="clearSearchFilter"
-            >
-              <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
-              <span class="sr-only">Clear search filter</span>
-            </button>
-          </span>
-        </div>
-      </div>
+    <ProductFilterSummary
+      v-if="showFilterSummary"
+      :is-category-filtered="isCategoryFiltered"
+      :category-label="filteredCategoryLabel"
+      :is-search-filtered="isSearchFiltered"
+      :search-query="searchQueryDisplay"
+      @clear-category="clearCategoryFilter"
+      @clear-search="clearSearchFilter"
+    />
 
       <p v-if="livePreviewAnnouncement" class="sr-only" aria-live="polite">
         {{ livePreviewAnnouncement }}
@@ -88,69 +61,15 @@
       </div>
 
       <div v-else-if="hasProducts" :class="productGridClasses">
-        <article
+        <ProductCard
           v-for="product in displayProducts"
           :key="product.id"
-          :class="cardClasses(product)"
-          :data-category="product.category"
-        >
-          <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
-            <img
-              :src="product.image"
-              :alt="product.title"
-              class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-              loading="lazy"
-            >
-            <span class="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-              {{ product.categoryLabel }}
-            </span>
-          </div>
-          <div class="flex flex-1 flex-col gap-4 p-4">
-            <div class="flex items-baseline justify-between gap-3">
-              <span class="text-base font-semibold text-slate-900">{{ product.priceFormatted }}</span>
-              <span
-                v-if="product.ratingValue"
-                class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
-              >
-                <UIcon name="i-heroicons-star-20-solid" class="size-4" aria-hidden="true" />
-                {{ product.ratingValue }}
-                <span
-                  v-if="product.ratingCount"
-                  class="text-[11px] font-medium text-amber-600/80"
-                >
-                  ({{ product.ratingCount }})
-                </span>
-              </span>
-            </div>
-            <h2 class="line-clamp-2 text-sm font-medium text-slate-900">
-              {{ product.title }}
-            </h2>
-            <p class="line-clamp-2 text-sm text-slate-500">
-              {{ product.description }}
-            </p>
-            <div class="mt-auto flex items-center gap-3">
-              <UButton
-                color="neutral"
-                variant="soft"
-                class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
-                icon="i-heroicons-information-circle"
-                :to="`/products/${product.id}`"
-              >
-                View details
-              </UButton>
-              <UButton
-                color="primary"
-                :loading="isAddingToCart(product.id)"
-                :disabled="isAddingToCart(product.id)"
-                class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
-                icon="i-heroicons-shopping-cart-20-solid"
-                @click="handleAddToCart(product)"
-              >
-                Add to cart
-              </UButton>
-            </div>
-          </div>
-        </article>
+          :product="product"
+          :is-preview-target="isPreviewActive && previewCategory === product.category"
+          :is-preview-muted="isPreviewActive && previewCategory && previewCategory !== product.category"
+          :is-adding="isAddingToCart(product.id)"
+          @add-to-cart="handleAddToCart"
+        />
       </div>
 
       <UCard
@@ -185,10 +104,12 @@
 
 <script setup lang="ts">
 import type { FakeStoreProduct } from '~/types/fake-store'
+import type { DisplayProduct } from '~/types/display-product'
 import { useMcpServer } from '../composables/useMcpServer'
 import { searchFakeStoreProducts } from '../utils/product-search'
 import { registerSearchTools } from '../utils/search-tools'
 import { useCartStore } from '../stores/cart'
+import { formatCategoryLabel } from '~/utils/category'
 
 const searchQuery = useState('search-query', () => '')
 const selectedCategory = useState('selected-category', () => 'all')
@@ -221,26 +142,6 @@ const productGridClasses = 'grid gap-5 grid-cols-[repeat(auto-fit,minmax(240px,1
 const filteredProducts = computed<FakeStoreProduct[]>(() =>
   searchFakeStoreProducts(rawProducts.value, searchQueryDisplay.value),
 )
-
-interface DisplayProduct {
-  id: number
-  title: string
-  description: string
-  price: number
-  priceFormatted: string
-  image: string
-  category: string
-  categoryLabel: string
-  ratingValue: string | null
-  ratingCount: number | null
-}
-
-function formatCategoryLabel(value: string) {
-  return value
-    .split(' ')
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
-}
 
 const displayProducts = computed<DisplayProduct[]>(() =>
   filteredProducts.value.map((product) => ({
@@ -412,22 +313,6 @@ function clearCategoryFilter() {
 function clearSearchFilter() {
   searchQuery.value = ''
   refreshProducts()
-}
-
-function cardClasses(product: DisplayProduct) {
-  const classes = [
-    'group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition duration-200 ease-out transition-transform transition-shadow focus-within:ring-2 focus-within:ring-primary-200 motion-safe:hover:-translate-y-1 hover:border-slate-300 motion-safe:hover:shadow-lg motion-safe:active:shadow-sm',
-  ]
-
-  if (isPreviewActive.value && previewCategory.value) {
-    if (product.category === previewCategory.value) {
-      classes.push('border-primary-200/80 shadow-[0_18px_45px_-26px_rgba(79,114,242,0.65)]')
-    } else {
-      classes.push('opacity-60 saturate-[0.85]')
-    }
-  }
-
-  return classes
 }
 
 function isAddingToCart(id: number) {

@@ -92,6 +92,7 @@
 
 <script setup lang="ts">
 import { useCartStore } from '../stores/cart'
+import { formatCategoryLabel } from '~/utils/category'
 
 const props = defineProps({
   modelValue: {
@@ -146,13 +147,6 @@ function remove(id: number) {
 
 function formatPrice(value: number) {
   return currencyFormatter.format(value)
-}
-
-function formatCategoryLabel(value: string) {
-  return value
-    .split(' ')
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
 }
 
 function goToCheckout() {

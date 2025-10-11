@@ -72,6 +72,7 @@ import AppCartDrawer from './components/AppCartDrawer.vue';
 import { useCartStore } from './stores/cart';
 import { useMcpServer } from './composables/useMcpServer';
 import { registerCartTools } from './utils/cart-tools';
+import { formatCategoryLabel } from '~/utils/category';
 
 const DEFAULT_CATEGORIES = ['electronics', 'jewelery', "men's clothing", "women's clothing"] as const
 
@@ -174,13 +175,6 @@ function createCategoryOption(slug: string): ProductCategory {
   }
 
   return { id: slug, label, icon: Gem }
-}
-
-function formatCategoryLabel(value: string) {
-  return value
-    .split(' ')
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
 }
 
 function handleCategoryPreview(id: string | null) {

@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 backdrop-blur supports-[backdrop-filter]:backdrop-blur"
+    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-sm backdrop-blur supports-[backdrop-filter]:backdrop-blur"
     style="--app-header-height: 72px"
   >
     <UContainer class="flex h-[56px] items-center gap-4 md:h-[64px] lg:h-[72px]">
@@ -13,13 +13,28 @@
         >
       </NuxtLink>
 
-      <form class="flex flex-1 flex-col items-center justify-center" @submit.prevent="onSubmit">
+      <div class="flex flex-1 justify-center md:hidden">
+        <UTooltip text="Search products">
+          <UButton
+            color="brand"
+            variant="solid"
+            class="w-full max-w-[220px] justify-center rounded-full"
+            icon="i-heroicons-magnifying-glass-20-solid"
+            aria-label="Search products"
+            @click="openMobileSearch"
+          >
+            Search
+          </UButton>
+        </UTooltip>
+      </div>
+
+      <form class="hidden flex-1 flex-col items-center justify-center md:flex" @submit.prevent="onSubmit">
         <div
-          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200"
-          :class="searchShellClasses"
+          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
+          :class="[searchShellClasses]"
         >
           <UInput
-            ref="searchField"
+            ref="desktopSearchField"
             v-model="query"
             aria-label="Search products"
             class="flex-1"
@@ -30,6 +45,18 @@
             @focus="handleSearchFocus"
             @blur="handleSearchBlur"
           />
+          <UTooltip text="Voice search (coming soon)">
+            <UButton
+              type="button"
+              color="neutral"
+              variant="ghost"
+              class="hidden md:inline-flex"
+              square
+              icon="i-heroicons-microphone-20-solid"
+              aria-label="Voice search (coming soon)"
+              disabled
+            />
+          </UTooltip>
           <UButton
             type="submit"
             color="primary"
@@ -59,12 +86,12 @@
       </form>
 
       <UTooltip text="View cart">
-          <UButton
-            variant="outline"
-            color="brand"
-            class="relative hidden min-w-max items-center gap-2 md:inline-flex"
-            @click="emitOpenCart"
-          >
+        <UButton
+          variant="outline"
+          color="brand"
+          class="relative hidden min-w-max items-center gap-2 md:inline-flex"
+          @click="emitOpenCart"
+        >
           <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
           <span class="hidden text-sm font-medium md:inline">Cart</span>
           <span
@@ -98,6 +125,55 @@
         </UButton>
       </UTooltip>
     </UContainer>
+
+    <USlideover v-model:open="isSearchDialogOpen" side="top" class="md:hidden">
+      <template #title>
+        Search products
+      </template>
+      <template #body>
+        <form class="space-y-4" @submit.prevent="handleMobileSubmit">
+          <div
+            class="flex w-full items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
+            :class="[searchShellClasses]"
+          >
+            <UInput
+              ref="overlaySearchField"
+              v-model="query"
+              aria-label="Search products"
+              class="flex-1"
+              icon="i-heroicons-magnifying-glass-20-solid"
+              input-class="rounded-full border-none bg-transparent focus:ring-0"
+              :placeholder="searchPlaceholder"
+              size="lg"
+              @focus="handleSearchFocus"
+              @blur="handleSearchBlur"
+            />
+            <UTooltip text="Voice search (coming soon)">
+              <UButton
+                type="button"
+                color="neutral"
+                variant="ghost"
+                square
+                icon="i-heroicons-microphone-20-solid"
+                aria-label="Voice search (coming soon)"
+                disabled
+              />
+            </UTooltip>
+            <UButton
+              type="submit"
+              color="primary"
+              icon="i-heroicons-magnifying-glass-20-solid"
+              class="flex-shrink-0"
+            >
+              Search
+            </UButton>
+          </div>
+          <p v-if="searchInventoryHint" class="text-xs font-medium text-slate-500">
+            {{ searchInventoryHint }}
+          </p>
+        </form>
+      </template>
+    </USlideover>
   </header>
 </template>
 
@@ -123,8 +199,10 @@ const emit = defineEmits<{
   (event: 'open-cart'): void
 }>()
 
-const searchField = ref()
+const desktopSearchField = ref()
+const overlaySearchField = ref()
 const isSearchFocused = ref(false)
+const isSearchDialogOpen = ref(false)
 
 const query = computed({
   get: () => props.modelValue,
@@ -153,12 +231,31 @@ const searchInventoryHint = computed(() => {
 })
 
 function focusSearch() {
-  const input = searchField.value?.inputRef as HTMLInputElement | undefined
-  input?.focus()
+  const desktopInput = desktopSearchField.value?.inputRef as HTMLInputElement | undefined
+
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    isSearchDialogOpen.value = true
+    nextTick(() => {
+      const input = overlaySearchField.value?.inputRef as HTMLInputElement | undefined
+      input?.focus()
+    })
+    return
+  }
+
+  desktopInput?.focus()
+}
+
+function openMobileSearch() {
+  isSearchDialogOpen.value = true
 }
 
 function onSubmit() {
   emit('search', query.value.trim())
+}
+
+function handleMobileSubmit() {
+  onSubmit()
+  isSearchDialogOpen.value = false
 }
 
 function handleKeydown(event: KeyboardEvent) {
@@ -196,4 +293,15 @@ function handleSearchBlur() {
 function emitOpenCart() {
   emit('open-cart')
 }
+
+watch(isSearchDialogOpen, (open) => {
+  if (!open) {
+    return
+  }
+
+  nextTick(() => {
+    const input = overlaySearchField.value?.inputRef as HTMLInputElement | undefined
+    input?.focus()
+  })
+})
 </script>

@@ -11,7 +11,7 @@
       <li v-for="category in categoryList" :key="category.id">
         <button
           type="button"
-          class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+          class="flex w-full items-center gap-3 rounded-xl border-l-4 px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
           :class="buttonClasses(category.id)"
           :aria-current="isActive(category.id) ? 'page' : undefined"
           @click="handleSelect(category.id)"
@@ -74,8 +74,8 @@ function handleSelect(id: string) {
 
 function buttonClasses(id: string) {
   return isActive(id)
-    ? 'bg-primary-50 text-primary-600 ring-1 ring-primary-100'
-    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+    ? 'border-brand-500 bg-brand-50 text-primary-600 ring-1 ring-primary-100'
+    : 'border-transparent text-slate-600 hover:border-slate-200 hover:bg-slate-100 hover:text-slate-900'
 }
 
 function iconClasses(id: string) {

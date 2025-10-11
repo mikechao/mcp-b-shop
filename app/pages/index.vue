@@ -60,17 +60,29 @@
         </UCard>
       </div>
 
-      <div v-else-if="hasProducts" :class="productGridClasses">
-        <ProductCard
-          v-for="product in displayProducts"
-          :key="product.id"
-          :product="product"
-          :is-preview-target="isPreviewActive && previewCategory === product.category"
-          :is-preview-muted="isPreviewActive && previewCategory && previewCategory !== product.category"
-          :is-adding="isAddingToCart(product.id)"
-          @add-to-cart="handleAddToCart"
-        />
-      </div>
+      <template v-else-if="hasProducts">
+        <div :class="productGridClasses">
+          <ProductCard
+            v-for="product in paginatedProducts"
+            :key="product.id"
+            :product="product"
+            :is-preview-target="isPreviewActive && previewCategory === product.category"
+            :is-preview-muted="isPreviewActive && previewCategory && previewCategory !== product.category"
+            :is-adding="isAddingToCart(product.id)"
+            @add-to-cart="handleAddToCart"
+          />
+        </div>
+        <div v-if="totalPages > 1" class="flex justify-center pt-4">
+          <UPagination
+            :model-value="currentPage"
+            :page-count="totalPages"
+            :total="productCount"
+            size="md"
+            aria-label="Product pagination"
+            @update:modelValue="handlePageChange"
+          />
+        </div>
+      </template>
 
       <UCard
         v-else-if="showEmptyState"
@@ -137,7 +149,9 @@ const showFilterSummary = computed(() => isCategoryFiltered.value || isSearchFil
 const filteredCategoryLabel = computed(() =>
   isCategoryFiltered.value ? formatCategoryLabel(selectedCategory.value) : '',
 )
-const productGridClasses = 'grid gap-5 grid-cols-[repeat(auto-fit,minmax(240px,1fr))]'
+const productGridClasses = 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+const ITEMS_PER_PAGE = 12
+const currentPage = useState('product-page', () => 1)
 
 const filteredProducts = computed<FakeStoreProduct[]>(() =>
   searchFakeStoreProducts(rawProducts.value, searchQueryDisplay.value),
@@ -160,6 +174,12 @@ const displayProducts = computed<DisplayProduct[]>(() =>
 
 const productCount = computed(() => displayProducts.value.length)
 const hasProducts = computed(() => productCount.value > 0)
+const totalPages = computed(() => Math.max(Math.ceil(productCount.value / ITEMS_PER_PAGE), 1))
+const paginatedProducts = computed<DisplayProduct[]>(() => {
+  const safePage = Math.min(Math.max(currentPage.value, 1), totalPages.value)
+  const start = (safePage - 1) * ITEMS_PER_PAGE
+  return displayProducts.value.slice(start, start + ITEMS_PER_PAGE)
+})
 const showSkeletons = computed(() => productsPending.value && rawProducts.value.length === 0)
 const showEmptyState = computed(() => !productsPending.value && !hasProducts.value && !productsError.value)
 const canResetFilters = computed(
@@ -325,12 +345,41 @@ function setAddToCartPending(id: number, value: boolean) {
     : addToCartPendingIds.value.filter((item) => item !== id)
 }
 
+function handlePageChange(page: number) {
+  currentPage.value = page
+
+  if (!process.client) {
+    return
+  }
+
+  window.requestAnimationFrame(() => {
+    const container = document.getElementById('product-grid')
+    if (container) {
+      const top = Math.max(container.getBoundingClientRect().top + window.scrollY - 120, 0)
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
+  })
+}
+
 watch(
   () => selectedCategory.value,
   () => {
     previewCategory.value = null
   },
 )
+
+watch(
+  () => [searchQuery.value, selectedCategory.value],
+  () => {
+    currentPage.value = 1
+  },
+)
+
+watch(totalPages, (value) => {
+  if (currentPage.value > value) {
+    currentPage.value = value
+  }
+})
 
 onBeforeMount(async () => {
   if (hasRegisteredSearchTool.value) {

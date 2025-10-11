@@ -13,7 +13,7 @@
 
     <div class="min-h-screen bg-slate-50 text-slate-900">
       <div class="mx-auto flex max-w-7xl flex-col gap-0 lg:flex-row">
-        <aside class="hidden w-64 shrink-0 border-r border-gray-200/80 bg-white/80 lg:block">
+        <aside class="hidden w-[264px] shrink-0 border-r border-gray-200/80 bg-white/80 lg:block">
           <div class="sticky top-[56px] px-6 py-6 md:top-[64px] lg:top-[72px]">
             <AppCategoryNav
               v-model="selectedCategory"

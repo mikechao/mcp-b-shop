@@ -91,7 +91,7 @@ const emit = defineEmits<{
 
 const cardClasses = computed(() => {
   const classes = [
-    'group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm transition duration-200 ease-out transition-transform transition-shadow focus-within:ring-2 focus-within:ring-primary-200 motion-safe:hover:-translate-y-1 hover:border-slate-300 motion-safe:hover:shadow-lg motion-safe:active:shadow-sm',
+    'group flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-[0_28px_70px_-32px_rgba(15,23,42,0.72),0_18px_36px_-30px_rgba(79,114,242,0.35)] transition duration-200 ease-out transition-transform transition-shadow focus-within:ring-2 focus-within:ring-primary-200 motion-safe:hover:-translate-y-1 hover:border-slate-300 motion-safe:hover:shadow-[0_36px_80px_-30px_rgba(79,114,242,0.6),0_22px_40px_-28px_rgba(15,23,42,0.5)] motion-safe:active:shadow-[0_20px_48px_-30px_rgba(15,23,42,0.6),0_16px_32px_-28px_rgba(79,114,242,0.4)]',
   ]
 
   if (props.isPreviewTarget) {

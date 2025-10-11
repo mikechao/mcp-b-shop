@@ -80,7 +80,7 @@ function buttonClasses(id: string) {
 
 function iconClasses(id: string) {
   return [
-    'inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg text-slate-500 transition',
+    'inline-flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-slate-500 transition',
     isActive(id)
       ? 'bg-primary-100 text-primary-600'
       : 'bg-slate-100',

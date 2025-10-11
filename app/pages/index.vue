@@ -1,182 +1,227 @@
 <template>
-  <section id="product-grid" class="space-y-6">
-    <header class="space-y-2">
-      <UBreadcrumb :links="breadcrumbLinks" />
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 class="text-2xl font-semibold text-slate-900">
-            {{ headingTitle }}
-          </h1>
-          <p class="text-sm text-slate-500">
-            {{ headingSubtitle }}
-          </p>
-        </div>
-      </div>
-    </header>
-
-    <div
-      v-if="showFilterSummary"
-      class="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-sm shadow-slate-200/40"
-    >
-      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Active filters</span>
-      <div class="flex flex-wrap items-center gap-2">
-        <span
-          v-if="isCategoryFiltered"
-          class="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"
-        >
-          {{ filteredCategoryLabel }}
-          <button
-            type="button"
-            class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
-            @click="clearCategoryFilter"
-          >
-            <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
-            <span class="sr-only">Clear category filter</span>
-          </button>
-        </span>
-        <span
-          v-if="isSearchFiltered"
-          class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
-        >
-          “{{ searchQueryDisplay }}”
-          <button
-            type="button"
-            class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
-            @click="clearSearchFilter"
-          >
-            <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
-            <span class="sr-only">Clear search filter</span>
-          </button>
-        </span>
-      </div>
-    </div>
-
-    <p v-if="livePreviewAnnouncement" class="sr-only" aria-live="polite">
-      {{ livePreviewAnnouncement }}
-    </p>
-
-    <UAlert
-      v-if="productsError"
-      color="error"
-      icon="i-heroicons-exclamation-circle"
-      title="We couldn’t load products"
-      class="border border-error-200/70"
-    >
-      <template #description>
-        {{ productsErrorMessage }}
-      </template>
-      <template #actions>
-        <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
-          Retry
-        </UButton>
-      </template>
-    </UAlert>
-
-    <div v-if="showSkeletons" :class="productGridClasses">
-      <UCard v-for="index in 8" :key="`skeleton-${index}`" class="flex flex-col gap-4 p-4">
-        <USkeleton class="aspect-[4/5] w-full rounded-2xl" />
-        <div class="space-y-2">
-          <USkeleton class="h-5 w-3/4 rounded-md" />
-          <USkeleton class="h-4 w-1/2 rounded-md" />
-          <USkeleton class="h-4 w-full rounded-md" />
-        </div>
-        <USkeleton class="h-9 w-full rounded-full" />
-      </UCard>
-    </div>
-
-    <div v-else-if="hasProducts" :class="productGridClasses">
-      <article
-        v-for="product in displayProducts"
-        :key="product.id"
-        :class="cardClasses(product)"
-        :data-category="product.category"
-      >
-        <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
-          <img
-            :src="product.image"
-            :alt="product.title"
-            class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-            loading="lazy"
-          >
-          <span class="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-            {{ product.categoryLabel }}
-          </span>
-        </div>
-        <div class="flex flex-1 flex-col gap-4 p-4">
-          <div class="flex items-baseline justify-between gap-3">
-            <span class="text-base font-semibold text-slate-900">{{ product.priceFormatted }}</span>
-            <span
-              v-if="product.ratingValue"
-              class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
-            >
-              <UIcon name="i-heroicons-star-20-solid" class="size-4" aria-hidden="true" />
-              {{ product.ratingValue }}
-              <span
-                v-if="product.ratingCount"
-                class="text-[11px] font-medium text-amber-600/80"
-              >
-                ({{ product.ratingCount }})
-              </span>
-            </span>
-          </div>
-          <h2 class="line-clamp-2 text-sm font-medium text-slate-900">
-            {{ product.title }}
+  <div class="space-y-6">
+    <UCard class="border border-brand-200/60 bg-brand-50/60 shadow-sm shadow-brand-200/50">
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-2 text-brand-700">
+          <UIcon name="i-heroicons-megaphone" class="size-5" aria-hidden="true" />
+          <h2 class="text-sm font-semibold uppercase tracking-wide">
+            Demo notice
           </h2>
-          <p class="line-clamp-2 text-sm text-slate-500">
-            {{ product.description }}
+        </div>
+        <div class="space-y-3">
+          <p class="text-sm leading-relaxed text-brand-900">
+            This shopping site is a demo for
+            <NuxtLink
+              to="https://mcp-b.ai"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-1 font-semibold text-brand-700 underline decoration-dotted underline-offset-4 hover:text-brand-800"
+            >
+              mcp-b.ai
+              <UIcon name="i-heroicons-arrow-up-right-20-solid" class="size-4" aria-hidden="true" />
+            </NuxtLink>
+            , which lets you use natural language to interact with a website.
           </p>
-          <div class="mt-auto flex items-center gap-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <p class="text-sm leading-relaxed text-brand-900">
+              Get the Chrome extension and type “Search for orange cat in the MCP-B Shop” in the chat.
+            </p>
             <UButton
-              color="neutral"
-              variant="soft"
-              class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
-              icon="i-heroicons-information-circle"
-              :to="`/products/${product.id}`"
-            >
-              View details
-            </UButton>
-            <UButton
+              href="https://chromewebstore.google.com/detail/mcp-b-extension/daohopfhkdelnpemnhlekblhnikhdhfa"
+              target="_blank"
+              rel="noopener"
               color="primary"
-              :loading="isAddingToCart(product.id)"
-              :disabled="isAddingToCart(product.id)"
-              class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
-              icon="i-heroicons-shopping-cart-20-solid"
-              @click="handleAddToCart(product)"
+              variant="solid"
+              size="md"
+              class="shadow-[0_10px_20px_-12px_rgba(64,78,237,0.9)]"
+              icon="i-heroicons-arrow-top-right-on-square-20-solid"
             >
-              Add to cart
+              Get Extension
             </UButton>
           </div>
         </div>
-      </article>
-    </div>
-
-    <UCard
-      v-else-if="showEmptyState"
-      class="flex flex-col items-center gap-4 border border-dashed border-slate-200 bg-white/80 py-12 text-center"
-    >
-      <UIcon name="i-heroicons-face-frown" class="size-12 text-slate-300" aria-hidden="true" />
-      <div class="space-y-1">
-        <h2 class="text-lg font-semibold text-slate-900">{{ emptyStateTitle }}</h2>
-        <p class="max-w-md text-sm text-slate-500">
-          {{ emptyStateDescription }}
-        </p>
-      </div>
-      <div class="flex flex-wrap justify-center gap-3">
-        <UButton color="primary" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
-          Retry fetch
-        </UButton>
-        <UButton
-          v-if="canResetFilters"
-          color="neutral"
-          variant="soft"
-          icon="i-heroicons-x-mark"
-          @click="handleResetFilters"
-        >
-          Clear filters
-        </UButton>
       </div>
     </UCard>
-  </section>
+
+    <section id="product-grid" class="space-y-6">
+      <header class="space-y-2">
+        <UBreadcrumb :links="breadcrumbLinks" />
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-semibold text-slate-900">
+              {{ headingTitle }}
+            </h1>
+            <p class="text-sm text-slate-500">
+              {{ headingSubtitle }}
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div
+        v-if="showFilterSummary"
+        class="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-sm shadow-slate-200/40"
+      >
+        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Active filters</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span
+            v-if="isCategoryFiltered"
+            class="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"
+          >
+            {{ filteredCategoryLabel }}
+            <button
+              type="button"
+              class="inline-flex size-5 items-center justify-center rounded-full text-primary-600 transition hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+              @click="clearCategoryFilter"
+            >
+              <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
+              <span class="sr-only">Clear category filter</span>
+            </button>
+          </span>
+          <span
+            v-if="isSearchFiltered"
+            class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600"
+          >
+            “{{ searchQueryDisplay }}”
+            <button
+              type="button"
+              class="inline-flex size-5 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400"
+              @click="clearSearchFilter"
+            >
+              <UIcon name="i-heroicons-x-mark" class="size-3.5" aria-hidden="true" />
+              <span class="sr-only">Clear search filter</span>
+            </button>
+          </span>
+        </div>
+      </div>
+
+      <p v-if="livePreviewAnnouncement" class="sr-only" aria-live="polite">
+        {{ livePreviewAnnouncement }}
+      </p>
+
+      <UAlert
+        v-if="productsError"
+        color="error"
+        icon="i-heroicons-exclamation-circle"
+        title="We couldn’t load products"
+        class="border border-error-200/70"
+      >
+        <template #description>
+          {{ productsErrorMessage }}
+        </template>
+        <template #actions>
+          <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
+            Retry
+          </UButton>
+        </template>
+      </UAlert>
+
+      <div v-if="showSkeletons" :class="productGridClasses">
+        <UCard v-for="index in 8" :key="`skeleton-${index}`" class="flex flex-col gap-4 p-4">
+          <USkeleton class="aspect-[4/5] w-full rounded-2xl" />
+          <div class="space-y-2">
+            <USkeleton class="h-5 w-3/4 rounded-md" />
+            <USkeleton class="h-4 w-1/2 rounded-md" />
+            <USkeleton class="h-4 w-full rounded-md" />
+          </div>
+          <USkeleton class="h-9 w-full rounded-full" />
+        </UCard>
+      </div>
+
+      <div v-else-if="hasProducts" :class="productGridClasses">
+        <article
+          v-for="product in displayProducts"
+          :key="product.id"
+          :class="cardClasses(product)"
+          :data-category="product.category"
+        >
+          <div class="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
+            <img
+              :src="product.image"
+              :alt="product.title"
+              class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+              loading="lazy"
+            >
+            <span class="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+              {{ product.categoryLabel }}
+            </span>
+          </div>
+          <div class="flex flex-1 flex-col gap-4 p-4">
+            <div class="flex items-baseline justify-between gap-3">
+              <span class="text-base font-semibold text-slate-900">{{ product.priceFormatted }}</span>
+              <span
+                v-if="product.ratingValue"
+                class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700"
+              >
+                <UIcon name="i-heroicons-star-20-solid" class="size-4" aria-hidden="true" />
+                {{ product.ratingValue }}
+                <span
+                  v-if="product.ratingCount"
+                  class="text-[11px] font-medium text-amber-600/80"
+                >
+                  ({{ product.ratingCount }})
+                </span>
+              </span>
+            </div>
+            <h2 class="line-clamp-2 text-sm font-medium text-slate-900">
+              {{ product.title }}
+            </h2>
+            <p class="line-clamp-2 text-sm text-slate-500">
+              {{ product.description }}
+            </p>
+            <div class="mt-auto flex items-center gap-3">
+              <UButton
+                color="neutral"
+                variant="soft"
+                class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
+                icon="i-heroicons-information-circle"
+                :to="`/products/${product.id}`"
+              >
+                View details
+              </UButton>
+              <UButton
+                color="primary"
+                :loading="isAddingToCart(product.id)"
+                :disabled="isAddingToCart(product.id)"
+                class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
+                icon="i-heroicons-shopping-cart-20-solid"
+                @click="handleAddToCart(product)"
+              >
+                Add to cart
+              </UButton>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <UCard
+        v-else-if="showEmptyState"
+        class="flex flex-col items-center gap-4 border border-dashed border-slate-200 bg-white/80 py-12 text-center"
+      >
+        <UIcon name="i-heroicons-face-frown" class="size-12 text-slate-300" aria-hidden="true" />
+        <div class="space-y-1">
+          <h2 class="text-lg font-semibold text-slate-900">{{ emptyStateTitle }}</h2>
+          <p class="max-w-md text-sm text-slate-500">
+            {{ emptyStateDescription }}
+          </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <UButton color="primary" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
+            Retry fetch
+          </UButton>
+          <UButton
+            v-if="canResetFilters"
+            color="neutral"
+            variant="soft"
+            icon="i-heroicons-x-mark"
+            @click="handleResetFilters"
+          >
+            Clear filters
+          </UButton>
+        </div>
+      </UCard>
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">

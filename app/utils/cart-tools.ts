@@ -9,6 +9,7 @@ const CART_ACTIONS = [
   'closeCart',
   'addProduct',
   'removeProduct',
+  'updateProduct',
 ] as const
 
 type CartAction = typeof CART_ACTIONS[number]
@@ -37,6 +38,11 @@ const addProductSchema = z.object({
 const removeProductSchema = z.object({
   product: fakeStoreProductSchema,
 })
+const updateProductSchema = z.object({
+  product: fakeStoreProductSchema,
+  operation: z.enum(['add', 'remove']),
+  quantity: z.number().int().min(1, 'Quantity must be at least 1'),
+})
 
 export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boolean>) {
   server.registerTool(
@@ -63,6 +69,10 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
         case 'removeProduct': {
           const { product } = removeProductSchema.parse(params)
           return handleRemoveProduct(product)
+        }
+        case 'updateProduct': {
+          const { product, operation, quantity } = updateProductSchema.parse(params)
+          return handleUpdateProduct(product, operation, quantity)
         }
       }
     },
@@ -112,6 +122,15 @@ export function registerCartTools(server: McpServer, isCartDrawerOpen: Ref<boole
           const paramsAndDescription = {
             params: toJson(removeProductSchema, 'removeProductParams'),
             description: 'Removes the provided FakeStore product from the shopping cart if it exists',
+          }
+          return {
+            content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
+          }
+        }
+        case 'updateProduct': {
+          const paramsAndDescription = {
+            params: toJson(updateProductSchema, 'updateProductParams'),
+            description: 'update item quanitiies in the shopping cart',
           }
           return {
             content: [{ type: 'text', text: JSON.stringify(paramsAndDescription, null, 2) }],
@@ -170,6 +189,71 @@ function handleRemoveProduct(product: FakeStoreProduct) {
     content: [{
       type: 'text' as const,
       text: `Removed "${product.title}" from the shopping cart. Items removed: ${existingQuantity}. Total items remaining: ${totalItems}.`,
+    }],
+  }
+}
+
+function handleUpdateProduct(
+  product: FakeStoreProduct,
+  operation: 'add' | 'remove',
+  quantity: number,
+) {
+  const cart = useCartStore()
+  const normalizedQuantity = Math.floor(quantity)
+
+  if (normalizedQuantity <= 0) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `No update performed because the provided quantity for "${product.title}" was less than 1.`,
+      }],
+    }
+  }
+
+  if (operation === 'add') {
+    let latestQuantity = cart.getItemQuantity(product.id)
+
+    for (let i = 0; i < normalizedQuantity; i += 1) {
+      latestQuantity = cart.addItem(product)
+    }
+
+    const totalItems = cart.totalQuantity
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `Added ${normalizedQuantity} unit(s) of "${product.title}". Quantity in cart: ${latestQuantity}. Total items across cart: ${totalItems}.`,
+      }],
+    }
+  }
+
+  const existingQuantity = cart.getItemQuantity(product.id)
+
+  if (existingQuantity === 0) {
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `No "${product.title}" product found in the shopping cart to update.`,
+      }],
+    }
+  }
+
+  const removalCount = Math.min(normalizedQuantity, existingQuantity)
+
+  for (let i = 0; i < removalCount; i += 1) {
+    cart.decreaseQuantity(product.id)
+  }
+
+  const remainingQuantity = cart.getItemQuantity(product.id)
+  const totalItems = cart.totalQuantity
+
+  const removalMessage = removalCount < normalizedQuantity
+    ? `Removed ${removalCount} of ${normalizedQuantity} requested unit(s); cart had fewer items available.`
+    : `Removed ${removalCount} unit(s).`
+
+  return {
+    content: [{
+      type: 'text' as const,
+      text: `${removalMessage} Remaining quantity of "${product.title}": ${remainingQuantity}. Total items across cart: ${totalItems}.`,
     }],
   }
 }

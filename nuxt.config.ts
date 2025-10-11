@@ -20,6 +20,10 @@ export default defineNuxtConfig({
   alias: {
     types: fileURLToPath(new URL('./app/types', import.meta.url)),
   },
+  nitro: {
+    // Build target for Cloudflare Pages (uses Pages Functions / Workers runtime)
+    preset: 'cloudflare-pages',
+  },
   vite: {
     optimizeDeps: {
       include: [

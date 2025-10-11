@@ -1,0 +1,7 @@
+name = "mcp-b-shop"
+compatibility_date = "2025-10-11"
+# Replace with your Cloudflare account id
+account_id = "129460f4b1926ac0985bfbe0da26d593"
+project_name = "mcp-b-shop"
+# For Pages projects, Wrangler is used for local dev and direct publish only.
+# When using Pages Git integration, configure any bindings in the Pages dashboard.

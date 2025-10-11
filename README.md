@@ -75,3 +75,36 @@ The Fake Store API base URL defaults to `https://fakestoreapi.com` via `runtimeC
 2. Create a branch and make your changes.
 3. Run the relevant `pnpm` scripts (`pnpm dev`, `pnpm build`, or `pnpm preview`) to verify the app.
 4. Open a pull request with a summary, screenshots for UI changes, and any follow-up tasks.
+
+## Deploy to Cloudflare Pages
+
+This project is configured to build for Cloudflare Pages using Nitro's `cloudflare-pages` preset.
+
+1) Build the project (produces the Pages/Functions output in `dist`/`.output`):
+
+```bash
+pnpm build
+```
+
+2) Local preview (emulates Pages + Functions). Requires `wrangler` installed as a dev dependency (already added):
+
+```bash
+pnpm run dev:pages
+```
+
+3) Direct publish (one-off upload from the local build):
+
+```bash
+npx wrangler pages publish dist --project-name mcp-b-shop
+```
+
+4) Git integration (recommended for continuous deploys):
+
+- Connect the repository to Cloudflare Pages via the Pages dashboard.
+- Build command: `pnpm build`
+- Build output directory: `.output/public`
+- Production branch: `main` (or your chosen branch)
+
+Notes:
+- If you need Cloudflare bindings (KV, R2, D1), configure them in the Pages dashboard and add local bindings to `wrangler.toml` for development.
+- To generate Cloudflare types for TypeScript bindings run `wrangler types` when needed.

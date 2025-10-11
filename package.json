@@ -8,6 +8,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "deploy:pages": "wrangler pages publish .output/public --project-name mcp-b-shop --branch main",
+    "dev:pages": "wrangler pages dev dist",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
@@ -31,6 +33,7 @@
     "@iconify-json/heroicons": "^1.2.3",
     "@types/node": "^24.6.2",
     "@unocss/eslint-plugin": "^66.5.1",
-    "eslint": "^9.36.0"
+    "eslint": "^9.36.0",
+    "wrangler": "^4.42.2"
   }
 }

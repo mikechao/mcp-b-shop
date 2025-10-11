@@ -30,7 +30,7 @@
               color="neutral"
               variant="ghost"
               icon="i-heroicons-bars-3"
-              class="w-full justify-between"
+              class="w-full justify-between rounded-full"
               @click="isCategoryDrawerOpen = true"
             >
               <span class="text-sm font-medium">Browse categories</span>

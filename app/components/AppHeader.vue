@@ -67,7 +67,7 @@
           <UButton
             variant="outline"
             color="brand"
-            class="relative hidden min-w-max items-center gap-2 md:inline-flex"
+            class="relative hidden min-w-max items-center gap-2 rounded-full md:inline-flex"
             @click="emitOpenCart"
           >
             <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
@@ -87,7 +87,7 @@
             variant="outline"
             color="brand"
             square
-            class="relative md:hidden"
+            class="relative rounded-full md:hidden"
             aria-label="View cart"
             @click="emitOpenCart"
           >

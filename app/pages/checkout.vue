@@ -17,7 +17,7 @@
           <p class='text-lg font-semibold text-slate-900'>Your cart is empty</p>
           <p class='text-sm text-slate-500'>Add a few items to generate an invoice and complete your demo checkout.</p>
         </div>
-        <UButton color='primary' icon='i-heroicons-arrow-uturn-left' to='/'>
+        <UButton color='primary' icon='i-heroicons-arrow-uturn-left' to='/' class='rounded-full'>
           Continue shopping
         </UButton>
       </UCard>
@@ -126,7 +126,7 @@
     </div>
 
     <div class='flex justify-center pt-4'>
-      <UButton color='primary' icon='i-heroicons-home' to='/'>
+      <UButton color='primary' icon='i-heroicons-home' to='/' class='rounded-full'>
         Back to home
       </UButton>
     </div>

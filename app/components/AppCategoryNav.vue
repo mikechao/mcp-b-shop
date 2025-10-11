@@ -11,7 +11,7 @@
       <li v-for="category in categoryList" :key="category.id">
         <button
           type="button"
-          class="flex w-full items-center gap-3 rounded-xl border-l-4 px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+          class="flex w-full items-center gap-3 rounded-full border-l-4 px-3 py-2 text-sm font-medium transition focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary-500"
           :class="buttonClasses(category.id)"
           :aria-current="isActive(category.id) ? 'page' : undefined"
           @click="handleSelect(category.id)"

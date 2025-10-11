@@ -5,7 +5,7 @@
         color="neutral"
         variant="soft"
         icon="i-heroicons-arrow-left-20-solid"
-        class="justify-start"
+        class="justify-start rounded-full"
         @click="handleGoBack"
       >
         Back
@@ -26,7 +26,7 @@
         {{ productErrorMessage }}
       </template>
       <template #actions>
-        <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" @click="refreshProduct">
+        <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" class="rounded-full" @click="refreshProduct">
           Retry
         </UButton>
       </template>
@@ -101,7 +101,7 @@
               :loading="isAddingToCart"
               :disabled="isAddingToCart"
               icon="i-heroicons-shopping-cart-20-solid"
-              class="min-w-40 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
+              class="min-w-40 justify-center rounded-full transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
               @click="handleAddToCart"
             >
               Add to cart
@@ -122,7 +122,7 @@
           We couldn’t find a product with this identifier. It may have been removed or is temporarily unavailable.
         </p>
       </div>
-      <UButton color="neutral" variant="soft" icon="i-heroicons-arrow-left-20-solid" @click="handleGoBack">
+      <UButton color="neutral" variant="soft" icon="i-heroicons-arrow-left-20-solid" class="rounded-full" @click="handleGoBack">
         Go back
       </UButton>
     </UCard>

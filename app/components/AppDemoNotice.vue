@@ -32,7 +32,7 @@
             color="primary"
             variant="solid"
             size="md"
-            class="shadow-[0_10px_20px_-12px_rgba(64,78,237,0.9)]"
+            class="rounded-full shadow-[0_10px_20px_-12px_rgba(64,78,237,0.9)]"
             icon="i-heroicons-arrow-top-right-on-square-20-solid"
           >
             Get Extension

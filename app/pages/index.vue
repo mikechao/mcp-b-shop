@@ -42,7 +42,7 @@
           {{ productsErrorMessage }}
         </template>
         <template #actions>
-          <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
+          <UButton color="error" variant="solid" icon="i-heroicons-arrow-path" class="rounded-full" @click="() => refreshProducts()">
             Retry
           </UButton>
         </template>
@@ -96,7 +96,7 @@
           </p>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
-          <UButton color="primary" icon="i-heroicons-arrow-path" @click="() => refreshProducts()">
+          <UButton color="primary" icon="i-heroicons-arrow-path" class="rounded-full" @click="() => refreshProducts()">
             Retry fetch
           </UButton>
           <UButton
@@ -104,6 +104,7 @@
             color="neutral"
             variant="soft"
             icon="i-heroicons-x-mark"
+            class="rounded-full"
             @click="handleResetFilters"
           >
             Clear filters

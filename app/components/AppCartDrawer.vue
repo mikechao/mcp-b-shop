@@ -13,7 +13,7 @@
           <p class="text-base font-semibold text-slate-800">Your cart is empty</p>
           <p class="text-sm">Browse the catalogue and add items to start your order.</p>
         </div>
-        <UButton color="primary" variant="soft" icon="i-heroicons-arrow-left" @click="close">
+        <UButton color="primary" variant="soft" icon="i-heroicons-arrow-left" class="rounded-full" @click="close">
           Continue shopping
         </UButton>
       </div>
@@ -42,6 +42,7 @@
                   variant="ghost"
                   icon="i-heroicons-trash"
                   aria-label="Remove item"
+                  class="rounded-full"
                   @click="remove(item.id)"
                 />
               </div>
@@ -53,6 +54,7 @@
                     variant="ghost"
                     icon="i-heroicons-minus"
                     aria-label="Decrease quantity"
+                    class="rounded-full"
                     @click="decrease(item.id)"
                   />
                   <span class="min-w-[2ch] text-sm font-semibold text-slate-900 text-center">{{ item.quantity }}</span>
@@ -62,6 +64,7 @@
                     variant="ghost"
                     icon="i-heroicons-plus"
                     aria-label="Increase quantity"
+                    class="rounded-full"
                     @click="increase(item.id)"
                   />
                 </div>
@@ -78,10 +81,10 @@
           <span>Subtotal</span>
           <span class="text-base font-semibold text-slate-900">{{ formatPrice(totalPrice) }}</span>
         </div>
-        <UButton color="primary" block icon="i-heroicons-credit-card" @click="goToCheckout">
+        <UButton color="primary" block icon="i-heroicons-credit-card" class="rounded-full" @click="goToCheckout">
           Proceed to checkout
         </UButton>
-        <UButton color="neutral" variant="ghost" block icon="i-heroicons-x-mark" @click="close">
+        <UButton color="neutral" variant="ghost" block icon="i-heroicons-x-mark" class="rounded-full" @click="close">
           Continue shopping
         </UButton>
       </div>

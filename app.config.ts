@@ -14,7 +14,7 @@ export default defineAppConfig({
     },
     input: {
       slots: {
-        base: 'rounded-[var(--radius-base)]',
+        base: 'rounded-full',
       },
     },
     card: {

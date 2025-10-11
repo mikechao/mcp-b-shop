@@ -11,9 +11,9 @@
       @open-cart="handleOpenCart"
     />
 
-    <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div class="min-h-screen bg-slate-50 text-slate-900">
       <div class="mx-auto flex max-w-7xl flex-col gap-0 lg:flex-row">
-        <aside class="hidden w-[264px] shrink-0 border-r border-gray-200/80 bg-white/80 dark:border-slate-800/70 dark:bg-slate-900/70 lg:block">
+        <aside class="hidden w-[264px] shrink-0 border-r border-gray-200/80 bg-white/80 lg:block">
           <div class="sticky top-[56px] px-6 py-6 md:top-[64px] lg:top-[72px]">
             <AppCategoryNav
               v-model="selectedCategory"
@@ -25,7 +25,7 @@
         </aside>
 
         <main id="main-content" class="flex flex-1 flex-col">
-          <div class="border-b border-gray-200/80 bg-white/80 px-4 py-4 backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/70 lg:hidden">
+          <div class="border-b border-gray-200/80 bg-white/80 px-4 py-4 backdrop-blur lg:hidden">
             <UButton
               color="neutral"
               variant="ghost"
@@ -146,7 +146,6 @@ useHead({
 })
 
 onMounted(() => {
-  document.documentElement.classList.remove('dark')
   document.documentElement.classList.add('light')
   try {
     window.localStorage.removeItem('mcpb-color-scheme')

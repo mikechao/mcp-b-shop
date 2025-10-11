@@ -1,9 +1,9 @@
 <template>
   <header
-    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-sm backdrop-blur transition-colors duration-300 supports-[backdrop-filter]:backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/90 dark:shadow-md dark:shadow-slate-900/30"
+    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-sm backdrop-blur transition-colors duration-300 supports-[backdrop-filter]:backdrop-blur"
     style="--app-header-height: 72px"
   >
-    <UContainer class="flex h-[56px] items-center gap-4 text-slate-900 transition-colors duration-300 md:h-[64px] lg:h-[72px] dark:text-slate-100">
+    <UContainer class="flex h-[56px] items-center gap-4 text-slate-900 transition-colors duration-300 md:h-[64px] lg:h-[72px]">
       <NuxtLink to="/" class="flex items-center gap-2" aria-label="MCP-B Shop home">
         <img
           alt="MCP-B Shop"
@@ -30,7 +30,7 @@
 
       <form class="hidden flex-1 flex-col items-center justify-center md:flex" @submit.prevent="onSubmit">
         <div
-          class="relative w-full max-w-2xl rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
+          class="relative w-full max-w-2xl rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
           :class="[searchShellClasses]"
         >
           <UInput
@@ -56,7 +56,7 @@
         </div>
         <p
           v-if="searchInventoryHint"
-          class="mt-2 w-full max-w-2xl text-left text-xs font-medium text-slate-500 dark:text-slate-400 md:hidden"
+          class="mt-2 w-full max-w-2xl text-left text-xs font-medium text-slate-500 md:hidden"
         >
           {{ searchInventoryHint }}
         </p>
@@ -112,7 +112,7 @@
       <template #body>
         <form class="space-y-4" @submit.prevent="handleMobileSubmit">
           <div
-            class="relative w-full rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
+            class="relative w-full rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
             :class="[searchShellClasses]"
           >
             <UInput
@@ -136,7 +136,7 @@
               Search
             </UButton>
           </div>
-          <p v-if="searchInventoryHint" class="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <p v-if="searchInventoryHint" class="text-xs font-medium text-slate-500">
             {{ searchInventoryHint }}
           </p>
         </form>
@@ -180,8 +180,8 @@ const query = computed({
 const showCartBadge = computed(() => props.cartCount > 0)
 const searchShellClasses = computed(() =>
   isSearchFocused.value
-    ? 'bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)] dark:bg-slate-900/80 dark:shadow-[0_18px_38px_-22px_rgba(79,114,242,0.45)]'
-    : 'bg-white/80 dark:bg-slate-900/60',
+    ? 'bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)]'
+    : 'bg-white/80',
 )
 const searchPlaceholder = computed(() =>
   query.value

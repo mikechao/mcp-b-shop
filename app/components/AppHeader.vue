@@ -30,7 +30,7 @@
 
       <form class="hidden flex-1 flex-col items-center justify-center md:flex" @submit.prevent="onSubmit">
         <div
-          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:border-slate-700/70 dark:bg-slate-900/70 dark:focus-within:ring-offset-slate-900"
+          class="flex w-full max-w-2xl items-center gap-2 rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
           :class="[searchShellClasses]"
         >
           <UInput
@@ -74,7 +74,6 @@
       </form>
 
       <div class="flex items-center gap-2 md:gap-3">
-        <AppColorModeToggle />
         <UTooltip text="View cart">
           <UButton
             variant="outline"
@@ -124,7 +123,7 @@
       <template #body>
         <form class="space-y-4" @submit.prevent="handleMobileSubmit">
           <div
-            class="flex w-full items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:border-slate-700/70 dark:bg-slate-900/70 dark:focus-within:ring-offset-slate-900"
+            class="flex w-full items-center gap-2 rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
             :class="[searchShellClasses]"
           >
             <UInput
@@ -192,8 +191,8 @@ const query = computed({
 const showCartBadge = computed(() => props.cartCount > 0)
 const searchShellClasses = computed(() =>
   isSearchFocused.value
-    ? 'border-primary-200/80 bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)] dark:border-primary-500/50 dark:bg-slate-900/80 dark:shadow-[0_18px_38px_-22px_rgba(79,114,242,0.45)]'
-    : 'border-slate-200/60 bg-white/80 dark:border-slate-700/70 dark:bg-slate-900/60',
+    ? 'bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)] dark:bg-slate-900/80 dark:shadow-[0_18px_38px_-22px_rgba(79,114,242,0.45)]'
+    : 'bg-white/80 dark:bg-slate-900/60',
 )
 const searchPlaceholder = computed(() =>
   query.value

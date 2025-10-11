@@ -66,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { Cat, Computer, Gem, Grip, Venus, Mars } from 'lucide-vue-next';
 import type { ProductCategory } from '~/types/category';
 import AppCartDrawer from './components/AppCartDrawer.vue';
@@ -137,6 +138,22 @@ const categoryOptions = computed<ProductCategory[]>(() => {
 })
 
 const toast = useToast()
+
+useHead({
+  htmlAttrs: {
+    class: 'light',
+  },
+})
+
+onMounted(() => {
+  document.documentElement.classList.remove('dark')
+  document.documentElement.classList.add('light')
+  try {
+    window.localStorage.removeItem('mcpb-color-scheme')
+  } catch {
+    // ignore storage access issues
+  }
+})
 
 function handleSearch(value: string) {
   searchQuery.value = value

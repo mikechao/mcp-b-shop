@@ -8,16 +8,10 @@ export default defineNuxtConfig({
       fakeStoreApiBase: 'https://fakestoreapi.com',
     },
   },
-  modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxtjs/color-mode'],
+  modules: ['@nuxt/ui', '@pinia/nuxt'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  colorMode: {
-    classSuffix: '',
-    storageKey: 'mcpb-color-scheme',
-    preference: 'system',
-    fallback: 'light',
-  },
   ui: {
     theme: {
       colors: ['primary', 'secondary', 'success', 'info', 'warning', 'error', 'neutral', 'brand', 'accent'],

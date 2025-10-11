@@ -37,11 +37,11 @@
       <p class="line-clamp-2 text-sm text-slate-500">
         {{ product.description }}
       </p>
-      <div class="mt-auto flex items-center gap-3">
+      <div class="mt-auto flex flex-col gap-3">
         <UButton
           color="neutral"
           variant="soft"
-          class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
+          class="w-full justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
           icon="i-heroicons-information-circle"
           :to="`/products/${product.id}`"
         >
@@ -51,7 +51,7 @@
           color="primary"
           :loading="isAdding"
           :disabled="isAdding"
-          class="flex-1 justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
+          class="w-full justify-center transition-transform duration-150 ease-out focus-visible:ring-2 focus-visible:ring-primary-200 active:scale-95"
           icon="i-heroicons-shopping-cart-20-solid"
           @click="handleAddToCart"
         >

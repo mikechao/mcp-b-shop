@@ -1,26 +1,22 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-Nuxt 4 loads entry from `app/app.vue`; keep page-level features under `app/routes/<feature>` with co-located stores/composables. Shared UI like buttons or layouts in `app/components/`, and design tokens in `app/assets/`. Agent instructions live in `agents/` for cross-team context; update alongside feature work. Static files (logos, manifest, fonts) belong in `public/`. Core configuration sits in `nuxt.config.ts` and owns module registration, runtime config, and Tailwind/Nuxt UI setup. TypeScript baselines live in `tsconfig.json`; extend via `compilerOptions` instead of replacing defaults.
+Nuxt 4 loads from `app/app.vue`; feature routes and their composables or stores live under `app/routes/<feature>`. Shared UI belongs in `app/components/`, while design tokens sit in `app/assets/`. Keep agent briefs or automation context in `agents/`. Static assets such as icons, fonts, or manifest files belong in `public/`. TypeScript baselines stay in `tsconfig.json`, and configuration for modules, runtime values, Tailwind, and Nuxt UI is centralized in `nuxt.config.ts`.
 
 ## Build, Test, and Development Commands
-`pnpm install` prepares dependencies and runs `nuxt prepare` to refresh types. `pnpm dev` launches the HMR dev server at http://localhost:3000. `pnpm build` compiles a production bundle; run before pushing release branches. `pnpm generate` produces a static export for Jamstack deploys. `pnpm preview` serves the built output locally so you can verify prod behaviour.
+Run `pnpm install` to install dependencies and trigger `nuxt prepare` for fresh type generation. Use `pnpm dev` for the hot-reload server at http://localhost:3000. Execute `pnpm build` before sharing release branches, and `pnpm preview` to serve the build locally. For Jamstack exports, `pnpm generate` emits static assets ready for deployment.
 
 ## Coding Style & Naming Conventions
-Use `<script setup lang="ts">` with 2-space indentation and single quotes in templates. Name components in PascalCase (`ProductGrid.vue`) and composables/stores in camelCase (`useCart`). Scope component styles with `<style scoped>` and place shared tokens in `app/assets/`. Follow the root ESLint config (`@antfu/eslint-config` + `@unocss/eslint-plugin`) and run your formatter before committing to retain Nuxt auto-import ordering.
+Prefer `<script setup lang="ts">` with 2-space indentation and single quotes in templates. Components follow PascalCase (`ProductGrid.vue`), composables and Pinia stores use camelCase (`useCart`). Scope component styles with `<style scoped>`. Run the repository formatter before committing to preserve Nuxt auto-import ordering, and rely on the root ESLint config (`@antfu/eslint-config` plus `@unocss/eslint-plugin`) for linting.
 
 ## Testing Guidelines
-Vitest is the preferred runner when tests are introduced; place specs under `tests/unit/` mirroring the source path (`ProductGrid.spec.ts`). Stub Nuxt composables via `@nuxt/test-utils` and cover loading, failure, and empty states when hitting FakeStoreAPI. Document any intentionally skipped cases in the PR description until coverage is in place.
+Vitest is the default test runner. Place unit specs in `tests/unit/`, mirroring the source path (`ProductGrid.spec.ts`). When stubbing Nuxt composables, use `@nuxt/test-utils`. Cover loading, empty, and failure states when calling FakeStoreAPI, and document any deferred cases if full coverage is not yet feasible.
 
 ## Commit & Pull Request Guidelines
-Write imperative, concise commit subjects (`Add product carousel`). Squash experimental commits before opening a PR. Each PR should describe scope, link relevant issues, and attach screenshots or recordings for UI changes plus the latest `pnpm build` or `pnpm preview` check. Note follow-up tasks or config changes that reviewers should track.
+Write concise, imperative commits (`Add product carousel`) and squash exploratory work before opening a PR. Each pull request should outline scope, link issues, and include screenshots or recordings for UI changes. Attach the latest `pnpm build` or `pnpm preview` results, and flag any follow-up tasks or configuration updates reviewers must track.
 
 ## Security & Configuration Tips
-Keep API keys and FakeStore overrides in local `.env` files and reference them via runtime config; never commit secrets. Review `nuxt.config.ts` for CSP or proxy adjustments before introducing third-party scripts.
+Do not commit secrets; keep FakeStoreAPI overrides or keys in local `.env` files and read them via Nuxt runtime config. Review `nuxt.config.ts` before adding external scripts to confirm CSP or proxy adjustments. Keep dependencies current and note any permission-sensitive changes in PR descriptions.
 
-## Additional Information
-- use the context7-mcp server to look up documentation for various frameworks that you will encounter for reference
-- Nuxt 4 is the framework used. use the context7-mcp server to look up documentation
-- Nuxt UI is used in this project. Nuxt UI is the official Nuxt-native component framework and design system, built with Tailwind and Radix primitives. It gives you themable, composable components
-- For product information we are using 'FakeStoreAPI' at https://github.com/keikaavousi/fake-store-api
-- Pinia is used as store to share state across components and pages
+## MCP Servers
+Use the `context7` MCP server to search documentation for Nuxt, Nuxt UI, Pinia, or other dependencies before introducing new patterns. Reach for the `sequential-thinking` MCP server when a task needs a structured reasoning walkthrough or plan; it helps break problems into actionable steps while keeping context.

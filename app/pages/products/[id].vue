@@ -3,7 +3,7 @@
     <div class="flex flex-wrap items-center gap-3">
       <UButton
         color="neutral"
-        variant="ghost"
+        variant="soft"
         icon="i-heroicons-arrow-left-20-solid"
         class="justify-start"
         @click="handleGoBack"

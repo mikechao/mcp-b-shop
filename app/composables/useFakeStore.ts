@@ -198,6 +198,15 @@ export function useFakeStoreProduct(id: MaybeRefOrGetter<number | string | null 
     return parsed
   })
 
+  const extraProduct = computed(() => {
+    if (normalizedId.value === null) {
+      return null
+    }
+
+    const match = EXTRA_PRODUCTS.find(product => product.id === normalizedId.value)
+    return match ? { ...match } : null
+  })
+
   const key = computed(() =>
     normalizedId.value !== null ? `fake-store-product-${normalizedId.value}` : 'fake-store-product-null',
   )
@@ -207,6 +216,10 @@ export function useFakeStoreProduct(id: MaybeRefOrGetter<number | string | null 
     async () => {
       if (normalizedId.value === null) {
         return null
+      }
+
+      if (extraProduct.value) {
+        return extraProduct.value
       }
 
       try {

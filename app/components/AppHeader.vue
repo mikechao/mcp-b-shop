@@ -45,18 +45,6 @@
             @focus="handleSearchFocus"
             @blur="handleSearchBlur"
           />
-          <UTooltip text="Voice search (coming soon)">
-            <UButton
-              type="button"
-              color="neutral"
-              variant="ghost"
-              class="hidden md:inline-flex"
-              square
-              icon="i-heroicons-microphone-20-solid"
-              aria-label="Voice search (coming soon)"
-              disabled
-            />
-          </UTooltip>
           <UButton
             type="submit"
             color="primary"
@@ -148,17 +136,6 @@
               @focus="handleSearchFocus"
               @blur="handleSearchBlur"
             />
-            <UTooltip text="Voice search (coming soon)">
-              <UButton
-                type="button"
-                color="neutral"
-                variant="ghost"
-                square
-                icon="i-heroicons-microphone-20-solid"
-                aria-label="Voice search (coming soon)"
-                disabled
-              />
-            </UTooltip>
             <UButton
               type="submit"
               color="primary"

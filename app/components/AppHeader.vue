@@ -1,9 +1,9 @@
 <template>
   <header
-    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-sm backdrop-blur supports-[backdrop-filter]:backdrop-blur"
+    class="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-sm backdrop-blur transition-colors duration-300 supports-[backdrop-filter]:backdrop-blur dark:border-slate-800/70 dark:bg-slate-900/90 dark:shadow-md dark:shadow-slate-900/30"
     style="--app-header-height: 72px"
   >
-    <UContainer class="flex h-[56px] items-center gap-4 md:h-[64px] lg:h-[72px]">
+    <UContainer class="flex h-[56px] items-center gap-4 text-slate-900 transition-colors duration-300 md:h-[64px] lg:h-[72px] dark:text-slate-100">
       <NuxtLink to="/" class="flex items-center gap-2" aria-label="MCP-B Shop home">
         <img
           alt="MCP-B Shop"
@@ -30,7 +30,7 @@
 
       <form class="hidden flex-1 flex-col items-center justify-center md:flex" @submit.prevent="onSubmit">
         <div
-          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
+          class="flex w-full max-w-2xl items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:border-slate-700/70 dark:bg-slate-900/70 dark:focus-within:ring-offset-slate-900"
           :class="[searchShellClasses]"
         >
           <UInput
@@ -67,51 +67,54 @@
         </div>
         <p
           v-if="searchInventoryHint"
-          class="mt-2 w-full max-w-2xl text-left text-xs font-medium text-slate-500 md:hidden"
+          class="mt-2 w-full max-w-2xl text-left text-xs font-medium text-slate-500 dark:text-slate-400 md:hidden"
         >
           {{ searchInventoryHint }}
         </p>
       </form>
 
-      <UTooltip text="View cart">
-        <UButton
-          variant="outline"
-          color="brand"
-          class="relative hidden min-w-max items-center gap-2 md:inline-flex"
-          @click="emitOpenCart"
-        >
-          <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
-          <span class="hidden text-sm font-medium md:inline">Cart</span>
-          <span
-            v-if="showCartBadge"
-            class="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary-600 px-1 text-xs font-semibold text-white"
-            role="status"
-            aria-live="polite"
+      <div class="flex items-center gap-2 md:gap-3">
+        <AppColorModeToggle />
+        <UTooltip text="View cart">
+          <UButton
+            variant="outline"
+            color="brand"
+            class="relative hidden min-w-max items-center gap-2 md:inline-flex"
+            @click="emitOpenCart"
           >
-            {{ cartCount }}
-          </span>
-        </UButton>
-      </UTooltip>
-      <UTooltip text="View cart" class="md:hidden">
-        <UButton
-          variant="outline"
-          color="brand"
-          square
-          class="relative md:hidden"
-          aria-label="View cart"
-          @click="emitOpenCart"
-        >
-          <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
-          <span
-            v-if="showCartBadge"
-            class="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary-600 px-1 text-xs font-semibold text-white"
-            role="status"
-            aria-live="polite"
+            <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
+            <span class="hidden text-sm font-medium md:inline">Cart</span>
+            <span
+              v-if="showCartBadge"
+              class="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary-600 px-1 text-xs font-semibold text-white"
+              role="status"
+              aria-live="polite"
+            >
+              {{ cartCount }}
+            </span>
+          </UButton>
+        </UTooltip>
+        <UTooltip text="View cart" class="md:hidden">
+          <UButton
+            variant="outline"
+            color="brand"
+            square
+            class="relative md:hidden"
+            aria-label="View cart"
+            @click="emitOpenCart"
           >
-            {{ cartCount }}
-          </span>
-        </UButton>
-      </UTooltip>
+            <UIcon name="i-heroicons-shopping-cart-20-solid" class="size-5" aria-hidden="true" />
+            <span
+              v-if="showCartBadge"
+              class="absolute -right-1 -top-1 inline-flex h-5 min-w-[1.25rem] translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary-600 px-1 text-xs font-semibold text-white"
+              role="status"
+              aria-live="polite"
+            >
+              {{ cartCount }}
+            </span>
+          </UButton>
+        </UTooltip>
+      </div>
     </UContainer>
 
     <USlideover v-model:open="isSearchDialogOpen" side="top" class="md:hidden">
@@ -121,7 +124,7 @@
       <template #body>
         <form class="space-y-4" @submit.prevent="handleMobileSubmit">
           <div
-            class="flex w-full items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white"
+            class="flex w-full items-center gap-2 rounded-full border px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:border-slate-700/70 dark:bg-slate-900/70 dark:focus-within:ring-offset-slate-900"
             :class="[searchShellClasses]"
           >
             <UInput
@@ -145,7 +148,7 @@
               Search
             </UButton>
           </div>
-          <p v-if="searchInventoryHint" class="text-xs font-medium text-slate-500">
+          <p v-if="searchInventoryHint" class="text-xs font-medium text-slate-500 dark:text-slate-400">
             {{ searchInventoryHint }}
           </p>
         </form>
@@ -189,8 +192,8 @@ const query = computed({
 const showCartBadge = computed(() => props.cartCount > 0)
 const searchShellClasses = computed(() =>
   isSearchFocused.value
-    ? 'border-primary-200/80 bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)]'
-    : 'border-slate-200/60 bg-white/80',
+    ? 'border-primary-200/80 bg-white shadow-[0_18px_38px_-22px_rgba(79,114,242,0.65)] dark:border-primary-500/50 dark:bg-slate-900/80 dark:shadow-[0_18px_38px_-22px_rgba(79,114,242,0.45)]'
+    : 'border-slate-200/60 bg-white/80 dark:border-slate-700/70 dark:bg-slate-900/60',
 )
 const searchPlaceholder = computed(() =>
   query.value

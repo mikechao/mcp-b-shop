@@ -52,6 +52,18 @@
     --ui-accent: var(--color-accent-500);
   }
 
+  html.dark {
+    --color-surface-base: #0f172a;
+    --color-surface-elevated: #111827;
+    --color-text-primary: #e2e8f0;
+    --color-text-muted: #94a3b8;
+    --color-border-default: rgba(148, 163, 184, 0.24);
+    --ui-primary: var(--color-brand-400);
+    --ui-primary-dark: var(--color-brand-300);
+    --ui-primary-light: var(--color-brand-200);
+    --ui-accent: var(--color-accent-400);
+  }
+
   body {
     background-color: var(--color-surface-base);
     color: var(--color-text-primary);

@@ -30,16 +30,16 @@
 
       <form class="hidden flex-1 flex-col items-center justify-center md:flex" @submit.prevent="onSubmit">
         <div
-          class="flex w-full max-w-2xl items-center gap-2 rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
+          class="relative w-full max-w-2xl rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
           :class="[searchShellClasses]"
         >
           <UInput
             ref="desktopSearchField"
             v-model="query"
             aria-label="Search products"
-            class="flex-1"
+            class="w-full"
             icon="i-heroicons-magnifying-glass-20-solid"
-            input-class="rounded-full border-none bg-transparent focus:ring-0"
+            input-class="rounded-full border-none bg-transparent pr-32 focus:ring-0"
             :placeholder="searchPlaceholder"
             size="lg"
             @focus="handleSearchFocus"
@@ -48,22 +48,11 @@
           <UButton
             type="submit"
             color="primary"
-            class="hidden md:inline-flex"
+            class="absolute inset-y-1 right-1 hidden items-center justify-center gap-1 rounded-full px-5 text-sm font-semibold md:inline-flex"
             icon="i-heroicons-magnifying-glass-20-solid"
           >
             Search
           </UButton>
-          <UTooltip text="Search products">
-            <UButton
-              type="submit"
-              color="brand"
-              variant="solid"
-              class="md:hidden"
-              square
-              icon="i-heroicons-magnifying-glass-20-solid"
-              aria-label="Search products"
-            />
-          </UTooltip>
         </div>
         <p
           v-if="searchInventoryHint"
@@ -123,16 +112,16 @@
       <template #body>
         <form class="space-y-4" @submit.prevent="handleMobileSubmit">
           <div
-            class="flex w-full items-center gap-2 rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
+            class="relative w-full rounded-full px-3 py-1 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary-400 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-slate-900"
             :class="[searchShellClasses]"
           >
             <UInput
               ref="overlaySearchField"
               v-model="query"
               aria-label="Search products"
-              class="flex-1"
+              class="w-full"
               icon="i-heroicons-magnifying-glass-20-solid"
-              input-class="rounded-full border-none bg-transparent focus:ring-0"
+              input-class="rounded-full border-none bg-transparent pr-24 focus:ring-0"
               :placeholder="searchPlaceholder"
               size="lg"
               @focus="handleSearchFocus"
@@ -142,7 +131,7 @@
               type="submit"
               color="primary"
               icon="i-heroicons-magnifying-glass-20-solid"
-              class="flex-shrink-0"
+              class="absolute inset-y-1 right-1 flex items-center justify-center gap-1 rounded-full px-4 text-sm font-semibold"
             >
               Search
             </UButton>

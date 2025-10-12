@@ -85,8 +85,16 @@ async function createServerInstance(): Promise<McpServer> {
     // Get allowed origins from runtime config or environment
     const config = useRuntimeConfig()
     const allowedOrigins = typeof config.public?.mcpAllowedOrigins === 'string'
-      ? config.public.mcpAllowedOrigins.split(',')
-      : ['http://localhost:3000', 'http://localhost:3001'] // Safe default
+      ? config.public.mcpAllowedOrigins
+        .split(',')
+        .map(origin => origin.trim())
+        .filter(Boolean)
+      : [
+          'http://localhost:3000',
+          'http://127.0.0.1:8788',
+          'http://localhost:8788',
+          'https://mcp-b-shop.pages.dev/'
+        ] // Safe default for local dev and Wrangler Pages
 
     const transport = new TabServerTransport({
       allowedOrigins,

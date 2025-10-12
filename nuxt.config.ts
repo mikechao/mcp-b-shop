@@ -6,6 +6,16 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       fakeStoreApiBase: 'https://fakestoreapi.com',
+      mcpAllowedOrigins: process.env.NUXT_PUBLIC_MCP_ALLOWED_ORIGINS
+        ?? process.env.NITRO_PUBLIC_MCP_ALLOWED_ORIGINS
+        ?? [
+          'http://localhost:3000',
+          'http://127.0.0.1:8788',
+          'http://localhost:8788',
+          'https://mcp-b-shop.pages.dev',
+          'https://mcp-b.shop',
+          'https://www.mcp-b.shop',
+        ].join(','),
     },
   },
   modules: ['@nuxt/ui', '@pinia/nuxt'],

@@ -69,6 +69,8 @@ pnpm generate
 
 The Fake Store API base URL defaults to `https://fakestoreapi.com` via `runtimeConfig.public.fakeStoreApiBase`. Override it by defining `NUXT_PUBLIC_FAKE_STORE_API_BASE` (or the equivalent `NITRO_PUBLIC_` prefix) in your `.env` file if you want to point at a different data source.
 
+The embedded MCP server validates the page origin before connecting to the MCP-B extension. Configure additional domains with `NUXT_PUBLIC_MCP_ALLOWED_ORIGINS` (comma-separated), or rely on the defaults of `http://localhost:3000`, `http://127.0.0.1:8788`, `http://localhost:8788`, `https://mcp-b-shop.pages.dev`, `https://mcp-b.shop`, and `https://www.mcp-b.shop`.
+
 ## Contributing
 
 1. Fork and clone the repository.
